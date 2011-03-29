@@ -122,16 +122,16 @@ It is possible to see all of the possibilities using the
 
 [apple-kv]: http://www.apple.com/macosx/tips/keyboard11.html
 
-![Keyboard viewer--full sized](Images/full-kb.png)
-![Keyboard viewer--laptop](Images/laptop-kb.png)
+![Keyboard viewer--full sized](./Images/full-kb.png)
+![Keyboard viewer--laptop](./Images/laptop-kb.png)
 
 In addition, the option key, both alone and in conjunction with the shift key,
 will change the characters inserted. So 'Option-y' inserts a '&yen;' currency
 mark, and 'Option-Shift-c' inserts a capital cedilla: '&Ccedil;'. We can see
 how option affects our input options using the Keyboard Viewer:
 
-![Keyboard viewer--full sized--option key](Images/full-kb-opt.png)
-![Keyboard viewer--full sized--shift+option](Images/full-kb-opt-shift.png)
+![Keyboard viewer--full sized--option key](./Images/full-kb-opt.png)
+![Keyboard viewer--full sized--shift+option](./Images/full-kb-opt-shift.png)
 
 Users with full keyboards have a complete number pad, with an enter key
 (instead of return), and symbols used in arithmetic. This number pad is
@@ -142,7 +142,7 @@ pad while the Fn key is held down. This is great for typing lots of numeric
 data, and also comes in handy when playing games that allow vertical,
 horizontal, and diagonal movement via the number pad:
 
-![Keyboard viewer--laptop--function key](Images/laptop-kb-fn-numpad.png)
+![Keyboard viewer--laptop--function key](./Images/laptop-kb-fn-numpad.png)
 
 Of course, there are a number of standard actions that the above pictures
 don't show.  For instance, when you type 'Command-left', the insertion
@@ -657,7 +657,7 @@ managers in particular are quite popular:
     such text.  Repeatedly invoking the selector flips through any other
     occurrences in the document.  A picture can say this better than I can:
     
-    ![Incremental Search Input Manager](Images/incremental-search.png)
+    ![Incremental Search Input Manager](./Images/incremental-search.png)
 
     The relevant part of my key bindings file looks like this:
     
@@ -695,7 +695,7 @@ Mine, which I've set to put the keys on a [Model M][wp-modelm] keyboard in the
 right places, with 'Control' where it belongs next to the 'A' key, looks like
 this:
 
-![Keyboard Pref Pane](Images/keyboard-pref-pane.png)
+![Keyboard Pref Pane](./Images/keyboard-pref-pane.png)
 
 [wp-modelm]: http://en.wikipedia.org/wiki/Model_M_Keyboard
 
