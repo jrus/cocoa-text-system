@@ -1,0 +1,68 @@
+{
+/* Keybindings for emacs emulation.  Compiled by Jacob Rus.
+ *
+ * This is a pretty good set, especially considering that many emacs bindings
+ * such as C-o, C-a, C-e, C-k, C-y, C-v, C-f, C-b, C-p, C-n, C-t, and
+ * perhaps a few more, are already built into the system.
+ *
+ * BEWARE:
+ * This file uses the Option key as a meta key.  This has the side-effect
+ * of overriding Mac OS keybindings for the option key, which generally
+ * make common symbols and non-english letters.
+ */
+        
+    /* Ctrl shortcuts */
+    "^l"        = "centerSelectionInVisibleArea:";  /* C-l          Recenter */
+    "^/"        = "undo:";                          /* C-/          Undo */
+    "^_"        = "undo:";                          /* C-_          Undo */
+    "^ "        = "setMark:";                       /* C-Spc        Set mark */
+    "^\@"       = "setMark:";                       /* C-@          Set mark */
+    "^w"        = "deleteToMark:";                  /* C-w          Delete to mark */
+
+
+    /* Incremental search. */
+/* Uncomment these lines If Incremental Search IM is installed */
+/*  "^s"        = "ISIM_incrementalSearch:";        /* C-s          Incremental search */
+/*  "^r"        = "ISIM_reverseIncrementalSearch:"; /* C-r          Reverse incremental search */
+/*  "^g"        = "abort:";                         /* C-g          Abort */
+
+
+    /* Meta shortcuts */
+    "~f"        = "moveWordForward:";               /* M-f          Move forward word */
+    "~b"        = "moveWordBackward:";              /* M-b          Move backward word */
+    "~<"        = "moveToBeginningOfDocument:";     /* M-<          Move to beginning of document */
+    "~>"        = "moveToEndOfDocument:";           /* M->          Move to end of document */
+    "~v"        = "pageUp:";                        /* M-v          Page Up */
+    "~/"        = "complete:";                      /* M-/          Complete */
+    "~c"        = ( "capitalizeWord:",              /* M-c          Capitalize */
+                    "moveForward:",
+                    "moveForward:");                                
+    "~u"        = ( "uppercaseWord:",               /* M-u          Uppercase */
+                    "moveForward:",
+                    "moveForward:");
+    "~l"        = ( "lowercaseWord:",               /* M-l          Lowercase */
+                    "moveForward:",
+                    "moveForward:");
+    "~d"        = "deleteWordForward:";             /* M-d          Delete word forward */
+    "^~h"       = "deleteWordBackward:";            /* M-C-h        Delete word backward */
+    "~\U007F"   = "deleteWordBackward:";            /* M-Bksp       Delete word backward */
+    "~t"        = "transposeWords:";                /* M-t          Transpose words */
+    "~\@"       = ( "setMark:",                     /* M-@          Mark word */
+                    "moveWordForward:",
+                    "swapWithMark");
+    "~h"        = ( "setMark:",                     /* M-h          Mark paragraph */
+                    "moveToEndOfParagraph:",
+                    "swapWithMark");
+
+    /* C-x shortcuts */
+    "^x" = {
+        "u"     = "undo:";                          /* C-x u        Undo */
+        "k"     = "performClose:";                  /* C-x k        Close */
+        "^f"    = "openDocument:";                  /* C-x C-f      Open (find file) */
+        "^x"    = "swapWithMark:";                  /* C-x C-x      Swap with mark */
+        "^m"    = "selectToMark:";                  /* C-x C-m      Select to mark*/
+        "^s"    = "saveDocument:";                  /* C-x C-s      Save */
+        "^w"    = "saveDocumentAs:";                /* C-x C-w      Save as */
+    };
+
+}

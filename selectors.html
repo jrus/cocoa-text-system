@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Cocoa Text System - Usable Selectors</title>
+<style type="text/css">
+/* CSS hacked together by Jacob Rus */
+body {
+  margin:0;
+  background-color: #ccf;  
+  padding-left:5%;
+  padding-top:1.5em;
+  padding-bottom:3em;
+  font-family: "Helvetica", sans-serif;
+}
+
+#contents {	
+	background-color: #FAFFF2;
+	border: .25em #99C solid;
+	width: 80%;
+	max-width: 40em;
+	min-width: 20em;
+	padding-left:2.5em;
+	padding-right:3em;
+	margin:0;
+}
+
+#email{
+  font-size:80%;
+  width: 80%;
+	max-width: 40em;
+	min-width: 20em;
+	padding-top:.5em;
+	padding-left:30%;
+	margin:0;
+  float: left;
+}
+
+a:link {
+  color: #45B;
+}
+
+h1 {
+  color: #337;
+  margin-left:-.7em;
+}
+
+h2 {
+  color: #337;
+  margin-left:-.5em;
+}
+
+h3 {
+  color: #337;
+}
+
+h4 {
+  color: #337;
+}
+
+blockquote {
+  margin-left:2em;
+}
+
+pre {
+  margin-left:1.5em;
+  margin-right:-1em;
+  padding: .5em;
+  border: 1px #99C dashed;
+  background-color: #eef;
+}
+
+code {
+  font-family: "Monaco", "ProFont", "Bitstream Vera Sans Mono", "Andale Sans Mono", "Consolas", monospace;
+  color: #920;
+}
+
+}</style>
+</head><body>
+<div id="contents">
+<h1 id="usable_selectors_for_cocoa_key_bindings">Usable Selectors for Cocoa Key Bindings</h1>
+
+<p>by Jacob Rus <br />
+  Friday, 17 March 2006</p>
+
+<p>We can use a very wide variety of selectors in our key bindings. Note, if you
+find more usable selectors, please let me know about them. Thanks.</p>
+
+<h2 id="generally_applicable_selectors">Generally-applicable selectors</h2>
+
+<ul>
+<li><p><code>cancelOperation:</code> &#8212; &#8220;cancel the current operation.&#8221;</p></li>
+<li><p><code>showContextHelp:</code> &#8212; &#8220;invoke the help system, displaying information 
+relevant to the receiver and its current state. The sender argument is 
+typically the object that invoked this method.&#8221;</p></li>
+</ul>
+
+<h3 id="undo_redo">Undo/redo</h3>
+
+<ul>
+<li><code>undo:</code></li>
+<li><p><code>redo:</code></p></li>
+<li><p><code>breakUndoCoalescing</code> &#8212; this one sets up an undo state.  So if some more 
+text is typed, and then undo is invoked, it will come back to this point.</p></li>
+</ul>
+
+<h2 id="text_manipulation">Text manipulation</h2>
+
+<p>These selectors are for inserting, selecting, deleting, and moving text.</p>
+
+<h3 id="inserting_text">Inserting text</h3>
+
+<p>In general, these selectors: &#8220;Insert a &#8230; at the insertion point or selection, deleting the selection if there is one&#8221;</p>
+
+<ul>
+<li><p>These two also &#8220;end editing if the receiver is a text field&#8221;</p>
+
+<ul>
+<li><code>insertTab:</code></li>
+<li><code>insertNewline:</code></li>
+</ul></li>
+<li><p>These selectors should be used to avoid tabbing out of, for instance, a
+form field</p>
+
+<ul>
+<li><code>insertTabIgnoringFieldEditor:</code></li>
+<li><code>insertNewlineIgnoringFieldEditor:</code></li>
+</ul></li>
+<li><p><code>insertLineBreak:</code></p></li>
+<li><code>insertParagraphSeparator:</code></li>
+<li><p><code>insertContainerBreak:</code></p></li>
+<li><p><code>insertBacktab:</code> &#8212;  &#8220;handle a &#8216;backward tab&#8217;&#8221;</p></li>
+<li><p><code>insertText:</code> &#8212; my favorite selector, &#8220;insert a string at the insertion 
+point or selection, deleting the selection if there is one.&#8221;</p></li>
+</ul>
+
+<h3 id="deleting_text">Deleting text</h3>
+
+<p>This group of selectors simply wipes text off the face of the planet.</p>
+
+<ul>
+<li><p><code>delete:</code> &#8212; &#8220;deletes the selected text only&#8221;</p></li>
+<li><p><code>deleteBackward:</code>  </p></li>
+<li><code>deleteForward:</code></li>
+<li><code>deleteWordBackward:</code>  </li>
+<li><p><code>deleteWordForward:</code></p></li>
+<li><p><code>deleteBackwardByDecomposingPreviousCharacter:</code> &#8212; &#8220;If the previous 
+character is canonically decomposable, try to delete only the last 
+character in the grapheme cluster (for example, deleting “a”+ “´” results 
+in “a”)&#8221;</p></li>
+</ul>
+
+<h3 id="killing_and_yanking_text">Killing and yanking text</h3>
+
+<p>These selectors delete text, but also put it onto the kill ring (which means that it can be &#8220;yanked back later&#8221;):</p>
+
+<ul>
+<li><code>deleteToBeginningOfLine:</code>  </li>
+<li><p><code>deleteToEndOfLine:</code></p></li>
+<li><p><code>deleteToBeginningOfParagraph:</code>  </p></li>
+<li><p><code>deleteToEndOfParagraph:</code></p></li>
+<li><p><code>deleteToMark:</code> &#8212; &#8220;Delete all items from the insertion point to a 
+previously placed mark, including the selection itself if not empty.&#8221;</p></li>
+</ul>
+
+<p>This one brings back text:</p>
+
+<ul>
+<li><code>yank:</code> &#8212; &#8220;Replaces the insertion point or selection with text from the 
+kill buffer.&#8221;</li>
+</ul>
+
+<h3 id="change_the_case_of_the_selected_text">Change the case of the selected text</h3>
+
+<p>&#8220;change the case of a letter or letters in the selection, perhaps by opening a panel with capitalization options or by cycling through possible case combinations.&#8221;</p>
+
+<ul>
+<li><code>changeCaseOfLetter:</code></li>
+</ul>
+
+<p>&#8220;set the case of the word or words surrounding the insertion point or 
+selection, expanding the selection if necessary&#8221;</p>
+
+<ul>
+<li><code>lowercaseWord:</code></li>
+<li><code>uppercaseWord:</code></li>
+<li><code>capitalizeWord:</code></li>
+</ul>
+
+<h3 id="moving_the_insertion_point">Moving the insertion point</h3>
+
+<p>&#8220;move the selection or insertion point one element or character&#8221;</p>
+
+<ul>
+<li><code>moveBackward:</code>  </li>
+<li><code>moveForward:</code></li>
+<li><code>moveLeft:</code>  </li>
+<li><code>moveRight:</code></li>
+<li><code>moveUp:</code></li>
+<li><code>moveDown:</code></li>
+</ul>
+
+<p>&#8220;move the selection or insertion point one word&#8230;&#8221;</p>
+
+<ul>
+<li><code>moveWordBackward:</code></li>
+<li><code>moveWordForward:</code></li>
+<li><code>moveWordLeft:</code></li>
+<li><code>moveWordRight:</code></li>
+</ul>
+
+<p>&#8220;move the selection to&#8230; or the insertion point to&#8230;&#8221;</p>
+
+<ul>
+<li><code>moveToBeginningOfLine:</code></li>
+<li><code>moveToEndOfLine:</code></li>
+<li><code>moveToBeginningOfParagraph:</code></li>
+<li><code>moveToEndOfParagraph:</code></li>
+<li><code>moveToBeginningOfDocument:</code></li>
+<li><code>moveToEndOfDocument:</code></li>
+</ul>
+
+<p>&#8220;scroll the receiver&#8230; one page in its scroll view, also moving the insertion 
+point to the top of the newly displayed page.&#8221;</p>
+
+<ul>
+<li><code>pageUp:</code></li>
+<li><code>pageDown:</code></li>
+</ul>
+
+<h3 id="scroll_the_text_view">Scroll the text view</h3>
+
+<p>&#8220;scroll the receiver&#8230; in its scroll view, without changing the selection&#8221;</p>
+
+<ul>
+<li><code>scrollLineUp:</code></li>
+<li><code>scrollLineDown:</code></li>
+<li><code>scrollPageUp:</code></li>
+<li><code>scrollPageDown:</code></li>
+</ul>
+
+<p>&#8220;scroll the selection, whatever it is, inside its visible area.&#8221;</p>
+
+<ul>
+<li><code>centerSelectionInVisibleArea:</code></li>
+</ul>
+
+<h3 id="move_the_insertion_point_and_modify_the_selection">Move the insertion point and modify the selection</h3>
+
+<p>&#8220;expand or reduce either end of the selection by one element or character&#8221;</p>
+
+<ul>
+<li><code>moveBackwardAndModifySelection:</code></li>
+<li><code>moveForwardAndModifySelection:</code></li>
+<li><code>moveLeftAndModifySelection:</code></li>
+<li><code>moveRightAndModifySelection:</code></li>
+<li><code>moveUpAndModifySelection:</code></li>
+<li><code>moveDownAndModifySelection:</code></li>
+</ul>
+
+<p>&#8220;expand or reduce either end of the selection&#8230; by one whole word&#8221;</p>
+
+<ul>
+<li><code>moveWordBackwardAndModifySelection:</code></li>
+<li><code>moveWordForwardAndModifySelection:</code></li>
+<li><code>moveWordLeftAndModifySelection:</code></li>
+<li><code>moveWordRightAndModifySelection:</code></li>
+</ul>
+
+<p>Apparently some of the options are undocumented, but work just fine</p>
+
+<ul>
+<li><code>moveToBeginningOfDocumentAndModifySelection:</code></li>
+<li><code>moveToEndOfDocumentAndModifySelection:</code></li>
+<li><code>moveToBeginningOfLineAndModifySelection:</code></li>
+<li><code>moveToEndOfLineAndModifySelection:</code></li>
+<li><code>moveToBeginningOfParagraphAndModifySelection:</code></li>
+<li><code>moveToEndOfParagraphAndModifySelection:</code></li>
+<li><code>pageUpAndModifySelection:</code></li>
+<li><code>pageDownAndModifySelection:</code></li>
+</ul>
+
+<h3 id="select_text">Select text</h3>
+
+<p>&#8220;select&#8230;&#8221;</p>
+
+<ul>
+<li><code>selectAll:</code></li>
+<li><code>selectLine:</code></li>
+<li><code>selectParagraph:</code></li>
+<li><code>selectWord:</code> &#8212; &#8220;extend the selection to the nearest word boundaries
+outside it (up to, but not including, word delimiters).&#8221;</li>
+<li><code>selectToMark:</code> &#8212; &#8220;select all items from the insertion point or selection
+to a previously placed mark, including the selection itself if not empty.&#8221;</li>
+</ul>
+
+<h3 id="working_with_marks">Working with marks</h3>
+
+<ul>
+<li><p><code>setMark:</code> &#8212; &#8220;set a mark at the insertion point or selection, which is
+used by deleteToMark: and selectToMark:&#8221;</p></li>
+<li><p><code>swapWithMark:</code> &#8212; &#8220;swap the mark and the selection or insertion point, so
+that what was marked is now the selection or insertion point, and what was
+the insertion point or selection is now the mark.&#8221;</p></li>
+<li><p><code>selectToMark:</code> &#8212; &#8220;select all items from the insertion point or selection
+to a previously placed mark, including the selection itself if not empty.&#8221;</p></li>
+<li><p><code>deleteToMark:</code> &#8212; &#8220;delete all items from the insertion point to a
+previously placed mark, including the selection itself if not empty.&#8221;</p></li>
+</ul>
+
+<h3 id="other_text_editing_options">Other text editing options</h3>
+
+<ul>
+<li><p><code>complete:</code> &#8212; &#8220;complete an operation in progress or a partially 
+constructed element.&#8221;</p></li>
+<li><p><code>indent:</code> &#8212; &#8220;indent the selection or the insertion point if there is no 
+selection.&#8221;</p></li>
+<li><p><code>transpose:</code> &#8212; &#8220;Transposes the characters to either side of the insertion 
+point and advances the insertion point past both of them. Does nothing to 
+a selected range of text.&#8221;</p></li>
+<li><p><code>transposeWords:</code> &#8212; &#8220;Transposes the words to either side of the insertion 
+point and advances the insertion point past both of them. Does nothing to 
+a selected range of text.&#8221;</p></li>
+</ul>
+
+<h3 id="cut_copy_paste">Cut/Copy/Paste</h3>
+
+<ul>
+<li><p><code>copy:</code> &#8212; &#8220;copies the selected text onto the general pasteboard, in as 
+many formats as the receiver supports.&#8221;</p></li>
+<li><p><code>cut:</code> &#8212; &#8220;deletes the selected text and places it onto the general 
+pasteboard, in as many formats as the receiver supports.&#8221;</p></li>
+<li><p><code>paste:</code> &#8212; &#8220;pastes text from the general pasteboard at the insertion 
+point or over the selection.&#8221;</p></li>
+<li><p><code>pasteAsPlainText:</code> &#8212; &#8220;inserts the contents of the pasteboard into the 
+receiver’s text as plain text, in the manner of insertText:.&#8221;</p></li>
+<li><p><code>pasteAsRichText:</code> &#8212; &#8220;inserts the contents of the pasteboard into the 
+receiver’s text as rich text, maintaining its attributes.&#8221;</p></li>
+<li><p>Copy/paste fonts:</p>
+
+<ul>
+<li><p><code>copyFont:</code> &#8212; &#8220;copies the font information for the first character of 
+the selection (or for the insertion point) onto the font pasteboard, 
+as NSFontPboardType.&#8221;</p></li>
+<li><p><code>pasteFont:</code> &#8212; &#8220;pastes font information from the font pasteboard onto 
+the selected text or insertion point of a rich text object, or over 
+all text of a plain text object.&#8221;</p></li>
+</ul></li>
+<li><p>Copy/paste ruler:</p>
+
+<ul>
+<li><p><code>copyRuler:</code> &#8212; &#8220;copies the paragraph style information for first 
+selected paragraph onto the ruler pasteboard, as NSRulerPboardType, 
+and expands the selection to paragraph boundaries.&#8221;</p></li>
+<li><p><code>pasteRuler:</code> &#8212; &#8220;pastes paragraph style information from the ruler 
+pasteboard onto the selected paragraphs of a rich text object.&#8221;</p></li>
+</ul></li>
+</ul>
+
+<h2 id="text_styles_and_formatting_mostly_applies_to_rich_text">Text Styles and formatting (mostly applies to rich text)</h2>
+
+<h3 id="set_the_text_alignment">Set the text alignment</h3>
+
+<p>&#8220;applies &#8230; alignment to selected paragraphs (or all text if the receiver is 
+a plain text object)&#8221;</p>
+
+<ul>
+<li><code>alignCenter:</code></li>
+<li><code>alignLeft:</code></li>
+<li><code>alignRight:</code></li>
+<li><code>alignJustified:</code></li>
+</ul>
+
+<p>&#8220;changes the base writing direction of a paragraph, for languages like Hebrew 
+and Arabic, for example.&#8221;</p>
+
+<ul>
+<li><code>toggleBaseWritingDirection:</code></li>
+<li><code>changeBaseWritingDirectionToRTL:</code></li>
+<li><code>changeBaseWritingDirectionToLTR:</code></li>
+</ul>
+
+<h3 id="superscript_subscript">Superscript/subscript</h3>
+
+<ul>
+<li><p><code>superscript:</code> &#8212; &#8220;applies a superscript attribute to selected text (or
+all text if the receiver is a plain text object), raising its baseline
+offset by a predefined amount.&#8221;</p></li>
+<li><p><code>subscript:</code> &#8212; &#8220;applies a subscript attribute to selected text (or all
+text if the receiver is a plain text object), lowering its baseline offset
+by a predefined amount.&#8221;</p></li>
+<li><p><code>unscript:</code> &#8212; &#8220;removes any superscripting or subscripting from selected
+text (or all text if the receiver is a plain text object).&#8221;</p></li>
+</ul>
+
+<h3 id="underline_outline">Underline/outline</h3>
+
+<ul>
+<li><p><code>underline:</code> &#8212; &#8220;underlines selected text for a rich text object, or all
+text for a plain text object.&#8221;</p></li>
+<li><p><code>outline:</code></p></li>
+</ul>
+
+<h3 id="baseline_kerning_ligatures">Baseline, kerning, ligatures</h3>
+
+<p>Set the baseline of the text.</p>
+
+<ul>
+<li><p><code>lowerBaseline:</code> &#8212; &#8220;lowers the baseline offset of selected text by 1 point,
+or of all text if the receiver is a plain text view.&#8221;</p></li>
+<li><p><code>raiseBaseline:</code> &#8212; &#8220;raises the baseline offset of selected text by 1 point,
+or of all text if the receiver is a plain text view.&#8221;</p></li>
+</ul>
+
+<p>Set the kerning to be used for the text.</p>
+
+<ul>
+<li><p><code>useStandardKerning:</code> &#8212; &#8220;cause the receiver to use pair kerning data for
+the glyphs in its selection, or for all glyphs if the receiver is a plain
+text view.&#8221;</p></li>
+<li><p><code>turnOffKerning:</code> &#8212; &#8220;cause the receiver to use nominal glyph spacing for 
+the glyphs in its selection, or for all glyphs if the receiver is a plain 
+text view.&#8221;</p></li>
+<li><p><code>loosenKerning:</code> &#8212; &#8220;increase the space between glyphs in the receiver’s
+selection, or in all text if the receiver is a plain text view.&#8221;</p></li>
+<li><p><code>tightenKerning:</code> &#8212; &#8220;decrease the space between glyphs in the receiver’s
+selection, or for all glyphs if the receiver is a plain text view.&#8221;</p></li>
+</ul>
+
+<p>Tell the selection whether to use standard ligatures, or all ligatures.</p>
+
+<ul>
+<li><p><code>useStandardLigatures:</code> &#8212; &#8220;cause the receiver to use the standard
+ligatures available for the fonts and languages used when setting text,
+for the glyphs in the selection if the receiver is a rich text view, or
+for all glyphs if it’s a plain text view.&#8221;</p></li>
+<li><p><code>turnOffLigatures:</code> &#8212; &#8220;cause the receiver to use only required ligatures
+when setting text, for the glyphs in the selection if the receiver is a
+rich text view, or for all glyphs if it’s a plain text view.&#8221;</p></li>
+<li><p><code>useAllLigatures:</code> &#8212; &#8220;cause the receiver to use all ligatures available
+for the fonts and languages used when setting text, for the glyphs in the
+selection if the receiver is a rich text view, or for all glyphs if it’s a
+plain text view.&#8221;</p></li>
+<li><p><code>toggleTraditionalCharacterShape:</code> &#8212; &#8220;toggle the
+NSCharacterShapeAttibuteName attribute at the current selection.&#8221;</p></li>
+</ul>
+
+<h3 id="open_up_useful_panels_for_text_formatting">Open up useful panels for text formatting</h3>
+
+<ul>
+<li><p><code>orderFrontLinkPanel:</code> &#8212; &#8220;bring forward a panel allowing the user to
+manipulate links in the text view.&#8221;</p></li>
+<li><p><code>orderFrontListPanel:</code> &#8212; &#8220;bring forward a panel allowing the user to
+manipulate text lists in the text view.&#8221;</p></li>
+<li><p><code>orderFrontSpacingPanel:</code> &#8212; &#8220;bring forward a panel allowing the user to
+manipulate text line heights, interline spacing, and paragraph spacing, in
+the text view.</p></li>
+<li><p><code>orderFrontTablePanel:</code> &#8212; &#8220;bring forward a panel allowing the user to
+manipulate text tables in the text view.&#8221;</p></li>
+</ul>
+
+<h2 id="spelling_and_speech">Spelling and speech</h2>
+
+<p>Check the spelling of the text view:</p>
+
+<ul>
+<li><p><code>toggleContinuousSpellChecking:</code> &#8212; &#8220;toggle whether continuous spell
+checking is enabled for the receiver.&#8221;</p></li>
+<li><p>Perform spell checking. If I remember, the first one of these simply
+selects a misspelled word. The second one opens the spelling panel, and
+the third one tells the spelling system to ignore the selected word. I&#8217;m
+not positive of that however.</p>
+
+<ul>
+<li><p><code>checkSpelling:</code> &#8212; &#8220;search for a misspelled word in the receiver’s 
+text.&#8221;</p></li>
+<li><p><code>showGuessPanel:</code> &#8212; &#8220;open the Spelling panel, allowing the user to 
+make a correction during spell checking.&#8221;</p></li>
+<li><p><code>ignoreSpelling:</code></p></li>
+</ul></li>
+</ul>
+
+<p>OS X Speech synthesis:</p>
+
+<ul>
+<li><p><code>startSpeaking:</code> &#8212; &#8220;speak the selected text, or all text if no 
+selection.&#8221;</p></li>
+<li><p><code>stopSpeaking:</code> &#8212; &#8220;stop the speaking of text.&#8221;</p></li>
+</ul>
+
+<h2 id="window_and_document_options">Window and document options</h2>
+
+<h3 id="printing">Printing</h3>
+
+<ul>
+<li><p><code>printDocument:</code> &#8212; &#8220;bring up print sheet&#8221;</p></li>
+<li><p><code>runPageLayout:</code> &#8212; the same thing happens as when the user chooses the
+Page Setup menu command.</p></li>
+</ul>
+
+<h3 id="closing_saving_reverting_documents">Closing, saving, reverting documents</h3>
+
+<p>These do the same as the menu options of the same name:</p>
+
+<ul>
+<li><p><code>save:</code></p></li>
+<li><p><code>saveAs:</code></p></li>
+<li><p><code>saveTo:</code></p></li>
+<li><p><code>revert:</code></p></li>
+<li><p><code>performClose:</code> &#8212; &#8220;simulate the user clicking the close button by
+momentarily highlighting the button and then closing the window.&#8221;</p></li>
+</ul>
+
+<!--
+
+  * `new:`
+
+  * `openDocument:`
+
+  * `saveAllDocuments:`
+
+  * `clearRecentDocuments:` - "empty the recent documents list for the
+      application."
+-->
+
+<h3 id="window_manipulations">Window manipulations</h3>
+
+<p>These three simulate clicking the little gem buttons in the top left corner of
+the window. Note that <code>close:</code>, etc. are also usable selectors, but not
+advisable, as they act slightly differently. Most importantly, <code>close:</code>
+doesn&#8217;t prompt the user to save changes to unsaved documents, so data loss is
+possible if it is used:</p>
+
+<ul>
+<li><code>performClose:</code></li>
+<li><code>performMiniaturize:</code></li>
+<li><code>performZoom:</code></li>
+</ul>
+
+<p>These change window ordering or position:</p>
+
+<ul>
+<li><p><code>center</code> &#8212; &#8220;set the window’s location to the center of the screen.&#8221;</p></li>
+<li><p><code>orderBack:</code> &#8212; move the window behind all the other windows, without
+changing either the key window or the main window.</p></li>
+<li><p><code>orderFront:</code> &#8212; move the window in front of all the other windows,
+without changing either the key window or the main window.</p></li>
+</ul>
+
+<p>This one hides the application:</p>
+
+<ul>
+<li><code>hide:</code> &#8212; &#8220;Hide all the application’s windows, and the next application
+in line is activated.&#8221;</li>
+</ul>
+</div>
+<div id="email">Anything I can improve?  Send me an email: jacobolus AT gmail</div></body></html>

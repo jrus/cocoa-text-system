@@ -1,0 +1,231 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+	<html xmlns="http://www.w3.org/1999/xhtml" version="-//W3C//DTD XHTML 1.1//EN" xml:lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+		<title>Cocoa Text System - Default System Key Bindings</title>
+<style type="text/css">
+table {
+  border: solid
+}
+
+body {
+  margin:0;
+  background-color: #ccf;  
+  padding-left:5%;
+  padding-top:1.5em;
+  padding-bottom:3em;
+  font-family: "Helvetica", sans-serif;
+}
+
+img {
+  border: 2px #99C solid;
+}
+
+h1 {
+  color: #337;
+  margin-left:-.7em;
+}
+
+h2 {
+  color: #337;
+  margin-left:-.5em;
+}
+
+
+#contents {	
+  font: 12px 'Lucida Grande', 'Helvetica', sans-serif;
+	background-color: #FAFFF2;
+	border: .25em #99C solid;
+	width: 80%;
+	max-width: 60em;
+	min-width: 20em;
+	padding-left:2.5em;
+	padding-right:3em;
+	margin:0;
+}
+
+
+#email{
+  font-size:80%;
+  width: 80%;
+	max-width: 40em;
+	min-width: 20em;
+	padding-top:.5em;
+	padding-left:30%;
+	margin:0;
+  float: left;
+}
+
+table {
+  margin-left:2em;
+  border: none;
+  border-collapse: collapse;
+}
+
+td {
+  padding:.3em;
+  padding-right: 1em;
+}
+
+td.modifier {
+  text-align: right;
+  font-weight: bold;
+  padding-right: .5em;
+}
+
+td.key {
+  text-align: left;
+  font-weight: bold;
+  padding-left: 0em;
+}
+
+td.action {
+  text-align: left;
+  font-family: "Monaco", "ProFont", "Bitstream Vera Sans Mono", "Andale Sans Mono", "Consolas", monospace;
+  color: #920;
+}
+
+th {
+  color:#337;
+}
+
+#english {
+  min-width:8em;
+  text-align:left;
+}
+
+</style>
+
+</head>
+
+<body>
+<div id="contents">
+<h1>Default Mac OS X System Key Bindings</h1>
+
+<p><img src="Images/full-kb.png" alt="Keyboard viewer--full sized" title="" /></p>
+
+<table>
+  <tr><th colspan=2>Shortcut</th><th id="english">English</th><th align="left">Computerese</th></tr>
+  <tr><td class="modifier"></td>  <td class="key">↩</td><td>new line</td><td class="action">insertNewline:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">↩</td><td>new line (don't leave form box)<sup>1</sup></td><td class="action">insertNewlineIgnoringFieldEditor:</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⌅</td><td>new line</td><td class="action">insertNewline:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⌅</td><td>new line (don't leave form box)<sup>1</sup></td><td class="action">insertNewlineIgnoringFieldEditor:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⇥</td><td>tab</td><td class="action">insertTab:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⇥</td><td>tab (don't leave form box)<sup>1</sup></td><td class="action">insertTabIgnoringFieldEditor:</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⇤</td><td>backtab</td><td class="action">insertBacktab:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td class="modifier">⌘</td> <td class="key">space</td><td>change languages</td><td class="action">cycleToNextInputScript:</td></tr>
+  <tr><td class="modifier">⌘⌃</td><td class="key">space</td><td>change input system</td><td class="action">togglePlatformInputSystem:</td></tr>
+  <tr><td class="modifier">⌘⌥</td><td class="key">space</td><td>change keyboard layout</td><td class="action">cycleToNextInputKeyboardLayout:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⌫</td><td>delete backward</td><td class="action">deleteBackward:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">⌫</td><td>delete backward (an accent)</td><td class="action">deleteBackwardByDecomposingPreviousCharacter:</td></tr>
+  <tr><td class="modifier">⌃⌥</td><td class="key">⌫</td><td>delete backward one word</td><td class="action">deleteWordBackward:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⌫</td><td>delete backward one word</td><td class="action">deleteWordBackward:</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⌦</td><td>delete forward</td><td class="action">deleteForward:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⌦</td><td>delete forward one word</td><td class="action">deleteWordForward:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">esc</td><td>cancel</td><td class="action">cancelOperation:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">esc</td><td>complete current word</td><td class="action">complete:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⇡</td><td>move up</td><td class="action">moveUp:</td></tr>
+  <tr><td class="modifier">⇧</td> <td class="key">⇡</td><td>select upward</td><td class="action">moveUpAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">⇡</td><td>scroll one page up</td><td class="action">scrollPageUp:</td></tr>
+  <tr><td class="modifier">⌘</td> <td class="key">⇡</td><td>move to the beginning of the document</td><td class="action">moveToBeginningOfDocument:</td></tr>
+  <tr><td class="modifier">⌘⇧</td><td class="key">⇡</td><td>select to the beginning of the document</td><td class="action">moveToBeginningOfDocumentAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⇡</td><td>move to the beginning of the paragraph</td><td class="action">(moveBackward:, moveToBeginningOfParagraph:)</td></tr>
+  <tr><td class="modifier">⌥⇧</td><td class="key">⇡</td><td>select to the beginning of the paragraph</td><td class="action">moveParagraphBackwardAndModifySelection:</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⇣</td><td>move down</td><td class="action">moveDown:</td></tr>
+  <tr><td class="modifier">⇧</td> <td class="key">⇣</td><td>select downward</td><td class="action">moveDownAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">⇣</td><td>scroll one page down</td><td class="action">scrollPageDown:</td></tr>
+  <tr><td class="modifier">⌘</td> <td class="key">⇣</td><td>move to the end of the document</td><td class="action">moveToEndOfDocument:</td></tr>
+  <tr><td class="modifier">⌘⇧</td><td class="key">⇣</td><td>select to the end of the document</td><td class="action">moveToEndOfDocumentAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⇣</td><td>move to the end of the paragraph</td><td class="action">(moveForward:, moveToEndOfParagraph:)</td></tr>
+  <tr><td class="modifier">⌥⇧</td><td class="key">⇣</td><td>select to the end of the paragraph</td><td class="action">moveParagraphForwardAndModifySelection:</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⇠</td><td>move left</td><td class="action">moveLeft:</td></tr>
+  <tr><td class="modifier">⇧</td> <td class="key">⇠</td><td>select leftward</td><td class="action">moveLeftAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">⇠</td><td>move to the beginning of the line</td><td class="action">moveToBeginningOfLine:</td></tr>
+  <tr><td class="modifier">⌃⇧</td><td class="key">⇠</td><td>select to the beginning of the line</td><td class="action">moveToBeginningOfLineAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌘</td> <td class="key">⇠</td><td>move to the beginning of the line</td><td class="action">moveToBeginningOfLine:</td></tr>
+  <tr><td class="modifier">⌘⇧</td><td class="key">⇠</td><td>select to the beginning of the line</td><td class="action">moveToBeginningOfLineAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌘⌃</td><td class="key">⇠</td><td>switch writing direction to right-to-left</td><td class="action">changeBaseWritingDirectionToRTL:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⇠</td><td>move one word left</td><td class="action">moveWordLeft:</td></tr>
+  <tr><td class="modifier">⌥⇧</td><td class="key">⇠</td><td>select one word leftward</td><td class="action">moveWordLeftAndModifySelection:</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⇢</td><td>move right</td><td class="action">moveRight:</td></tr>
+  <tr><td class="modifier">⇧</td> <td class="key">⇢</td><td>select rightward</td><td class="action">moveRightAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">⇢</td><td>move to the end of the line</td><td class="action">moveToEndOfLine:</td></tr>
+  <tr><td class="modifier">⌃⇧</td><td class="key">⇢</td><td>select to the end of the line</td><td class="action">moveToEndOfLineAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌘</td> <td class="key">⇢</td><td>move to the end of the line</td><td class="action">moveToEndOfLine:</td></tr>
+  <tr><td class="modifier">⌘⇧</td><td class="key">⇢</td><td>select to the end of the line</td><td class="action">moveToEndOfLineAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌘⌃</td><td class="key">⇢</td><td>switch writing direction to left-to-right text</td><td class="action">changeBaseWritingDirectionToLTR:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⇢</td><td>move one word right</td><td class="action">moveWordRight:</td></tr>
+  <tr><td class="modifier">⌥⇧</td><td class="key">⇢</td><td>select one word rightward</td><td class="action">moveWordRightAndModifySelection:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">↖</td><td>scroll to the beginning of the document</td><td class="action">scrollToBeginningOfDocument:</td></tr>
+  <tr><td class="modifier">⇧</td> <td class="key">↖</td><td>select to the beginning of the document</td><td class="action">moveToBeginningOfDocumentAndModifySelection:</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">↘</td><td>scroll to the end of the document</td><td class="action">scrollToEndOfDocument:</td></tr>
+  <tr><td class="modifier">⇧</td> <td class="key">↘</td><td>select to the end of the document</td><td class="action">moveToEndOfDocumentAndModifySelection:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⇞</td><td>scroll one page up</td><td class="action">scrollPageUp:</td></tr>
+  <tr><td class="modifier">⇧</td> <td class="key">⇞</td><td>select one page up</td><td class="action">pageUpAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⇞</td><td>move one page up</td><td class="action">pageUp:</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">⇟</td><td>scroll one page down</td><td class="action">scrollPageDown:</td></tr>
+  <tr><td class="modifier">⇧</td> <td class="key">⇟</td><td>select one page down</td><td class="action">pageDownAndModifySelection:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">⇟</td><td>move one page down</td><td class="action">pageDown:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td class="modifier">⌘</td> <td class="key">.</td><td>cancel</td><td class="action">cancelOperation:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">A</td><td>move to the beginning of the paragraph</td><td class="action">moveToBeginningOfParagraph:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">B</td><td>move backward</td><td class="action">moveBackward:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">D</td><td>delete forward</td><td class="action">deleteForward:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">E</td><td>move to the end of the paragraph</td><td class="action">moveToEndOfParagraph:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">F</td><td>move forward</td><td class="action">moveForward:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">H</td><td>delete backward</td><td class="action">deleteBackward:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">K</td><td>delete to the end of the paragraph</td><td class="action">deleteToEndOfParagraph:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">L</td><td>center the selection in the text area</td><td class="action">centerSelectionInVisibleArea:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">N</td><td>move down</td><td class="action">moveDown:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">O</td><td>split the current line</td><td class="action">(insertNewlineIgnoringFieldEditor:, moveBackward:)</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">P</td><td>move up</td><td class="action">moveUp:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">T</td><td>transpose letters</td><td class="action">transpose:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">V</td><td>move one page down</td><td class="action">pageDown:</td></tr>
+  <tr><td class="modifier">⌃</td> <td class="key">Y</td><td>yank back ‘killed’ text</td><td class="action">yank:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td class="modifier"></td>  <td class="key">F5</td><td>complete current word</td><td class="action">complete:</td></tr>
+
+  <tr><td colspan=4>&nbsp;</td></tr>
+  <tr><td colspan=4><em>** Not on Apple keyboards **</em></td></tr>
+  
+  <tr><td class="modifier"></td>  <td class="key">Backspace</td><td>delete backward</td><td class="action">deleteBackward:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">Backspace</td><td>delete backward one word</td><td class="action">deleteWordBackward:</td></tr>
+
+  <tr><td class="modifier"></td>  <td class="key">Linefeed</td><td>new line</td><td class="action">insertNewline:</td></tr>
+  <tr><td class="modifier">⌥</td> <td class="key">Linefeed</td><td>new line (don't leave form box)<sup>1</sup></td><td class="action">insertNewlineIgnoringFieldEditor:</td></tr>
+
+</table>
+
+<br /><br />
+
+<ol><li><em>The commands invoked by ‘⌥ ⇥’ and ‘⌥ ↩’ are designed to avoid leaving
+the current text box, as happens when pressing ‘⇥’, which usually tabs to the
+next form field, or ‘↩’, which usually submits the form.</em></li></ol>
+
+<h2>US Keyboard Layout with Modifier Keys</h2>
+<p><img src="Images/full-kb.png" alt="Keyboard viewer--full sized" title="" /></p>
+<p><img src="Images/full-kb-shift.png" alt="Keyboard viewer--full sized, shift key" title="" /></p>
+<p><img src="Images/full-kb-opt.png" alt="Keyboard viewer--full sized, option key" title="" /></p>
+<p><img src="Images/full-kb-opt-shift.png" alt="Keyboard viewer--full sized, option+shift" title="" /></p>
+
+</div>
+<div id="email">Anything I can improve?  Send me an email: jacobolus AT gmail</div></body></html>

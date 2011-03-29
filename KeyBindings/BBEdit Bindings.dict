@@ -1,0 +1,69 @@
+{
+/*
+ *
+ * Key Bindings for partial BBEdit emulation, compiled by Jacob Rus
+ */
+ 
+ 
+        /* Incremental search -- uncomment if ISIM is installed */      
+/*        "@~f"       = "ISIM_incrementalSearch:";        /* A-O-f        Quick search */
+/*        "@~$f"      = "ISIM_reverseIncrementalSearch:"; /* A-O-Shft-f   Quick search backward */
+         
+
+        /* Select line */
+        "@l"        = "selectParagraph:";               /* C-l          Select line */
+
+        /* Scrolling */
+        "^\UF700"   = "scrollLineUp:";                  /* C-up         Scroll up */
+        "^\UF701"   = "scrollLineDown:";                /* C-down       Scroll down */
+        "@^\UF700"  = ( "scrollLineUp:",                /* A-C-up       Scroll up 2 lines */
+                        "scrollLineUp:");
+        "@^\UF701"  = ( "scrollLineDown:",              /* A-C-down     Scroll down 2 lines */
+                        "scrollLineDown:");
+        "~^\UF700"  = ( "scrollLineUp:",                /* A-C-up       Scroll up 3 lines */
+                        "scrollLineUp:",
+                        "scrollLineUp:");
+        "~^\UF701"  = ( "scrollLineDown:",              /* A-C-down     Scroll down 3 lines */
+                        "scrollLineDown:",
+                        "scrollLineDown:");
+        "@~^\UF700" = ( "scrollLineUp:",                /* A-C-up       Scroll up 6 lines */
+                        "scrollLineUp:",
+                        "scrollLineUp:",
+                        "scrollLineUp:",
+                        "scrollLineUp:",
+                        "scrollLineUp:");
+        "@~^\UF701" = ( "scrollLineDown:",              /* A-C-down     Scroll down 6 lines */
+                        "scrollLineDown:",
+                        "scrollLineDown:",
+                        "scrollLineDown:",
+                        "scrollLineDown:",
+                        "scrollLineDown:");
+
+
+        /* Page up-down */
+        "~\UF700"   = "pageUp:";                        /* O-up         Page up */
+        "~\UF701"   = "pageDown:";                      /* O-down       Page down */
+        "~$\UF700"  = "pageUpAndModifySelection";       /* O-Shft-up    Select page up */
+        "~$\UF701"  = "pageDownAndModifySelection";     /* O-Shft-down  Select page down */
+
+
+        /* delete backward-forward */
+        "$\U007F"   = "deleteForward:";                 /* Shft-Del     Delete forward */
+        "~\U007F"   = "deleteWordBackward:";            /* O-Del        Delete word backward */
+        "~\UF728"   = "deleteWordForward:";             /* O-FwdDel     Delete word forward */
+        "~$\U007F"  = "deleteWordForward:";             /* O-Shft-Del   Delete word forward */
+
+
+        /* These next few don't work, maddeningly.
+         * They don't really have a reason to stay in this file. */
+/*        "@\U007F"   = "deleteToBeginningOfParagraph:";  /* O-Del        Delete word backward */
+/*        "@\UF728"   = "deleteToEndOfParagraph:";        /* O-FwdDel     Delete word forward */
+/*        "@$\U007F"  = "deleteToEndOfParagraph:";        /* O-Shft-Del   Delete word forward */
+/*        "@~\U007F"  = ( "selectToBeginningOfDocument:", /* A-O-Del      Delete to beginning of document*/
+/*                        "delete:");
+/*        "@~\U007F"  = ( "selectToEndOfDocument:",       /* A-O-FwdDel   Delete to end of document*/
+/*                        "delete:");
+/*        "@~$\U007F" = ( "selectToEndOfDocument:",       /* A-O-Shft-Del Delete to end of document*/
+/*                        "delete:");
+        /* End failure section */
+}

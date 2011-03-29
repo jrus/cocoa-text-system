@@ -1,0 +1,935 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Cocoa Text System</title>
+<style type="text/css">
+/* CSS hacked together by Jacob Rus */
+body {
+  margin:0;
+  background-color: #ccf;
+  font-family: "Helvetica", sans-serif;  
+  padding-left:5%;
+  padding-top:1.5em;
+  padding-bottom:3em;
+}
+
+#contents {	
+	background-color: #FAFFF2;
+	border: .25em #99C solid;
+	width: 80%;
+	max-width: 40em;
+	min-width: 20em;
+	padding-left:2.5em;
+	padding-right:3em;
+	margin:0;
+}
+
+#email{
+  font-size:80%;
+  width: 80%;
+	max-width: 40em;
+	min-width: 20em;
+	padding-top:.5em;
+	padding-left:30%;
+	margin:0;
+  float: left;
+}
+
+a:link {
+  color: #45B;
+}
+
+h1 {
+  color: #337;
+  margin-left:-.7em;
+}
+
+h2 {
+  color: #337;
+  margin-left:-.5em;
+}
+
+h3 {
+  color: #337;
+}
+
+h4 {
+  color: #337;
+}
+
+blockquote {
+  margin-left:2em;
+}
+
+table {
+  margin-left:2em;
+}
+
+pre {
+  margin-left:1.5em;
+  margin-right:-1em;
+  padding: .5em;
+  border: 1px #99C dashed;
+  background-color: #eef;
+}
+
+code {
+  font-family: "Monaco", "ProFont", "Bitstream Vera Sans Mono", "Andale Sans Mono", "Consolas", monospace;
+  color: #920;
+}
+
+</style>
+</head><body>
+<div id="contents">
+<h1 id="customizing_the_cocoa_text_system">Customizing the Cocoa Text System</h1>
+
+<p>Version 0.8 <br />
+  by <a href="http://hcs.harvard.edu/~jrus/">Jacob Rus</a> <br />
+  Monday, 20 March 2006</p>
+
+<p>Apple&#8217;s Cocoa text system is a complicated beast, but also extremely flexible,
+and with a bit of work, it can be molded to match many working styles. This
+how-to covers the 2 major ways of customizing the text input system: Default
+key bindings, and for still more control, input managers.</p>
+
+<p>I&#8217;m writing this guide because nothing like it currently exists. There is
+incredible room for flexibility in customizing the Cocoa text environment, but
+most users&#8212;even power-users&#8212;have no idea of the available options. This is
+mostly because Apple&#8217;s documentation is 1) aimed at developers, and 2) often
+incomplete or ambiguous. Most users have no idea that they can look at a file
+which describes all of the shortcuts on the system, and that they can easily
+add their own shortcuts, or replace existing ones with differing
+functionality.</p>
+
+<p>For instance, one of the most common complaints from new Windows and
+Linux/Unix switchers is that many of the shortcuts they are used to, such as
+using the Home and End keys to move to the beginning, respectively end, of a 
+line or document, don&#8217;t work as they expect in OS X.</p>
+
+<p>For new users, almost every text box you use is a Cocoa text box (or close
+enough to act the same as far as we&#8217;re concerned) &#8212; Safari web form boxes,
+the text field in iChat for sending new messages, the documents in Pages or
+TextEdit, the email composer in Mail, etc. <strong>Note:</strong> Some text boxes are not
+Cocoa however, so the tricks in this article still aren&#8217;t completely
+universal. Notably, Microsoft Word, Adobe applications, AppleWorks, and the
+text fields in Camino and Firefox won&#8217;t work with this hint.</p>
+
+<p>I expect that all users of OS X can get something out of this guide. I&#8217;m
+starting with the basics, so that new users, unfamiliar with the terminal and
+the intricacies of OS X can be brought up to speed. But even the most
+experienced users should hopefully learn something from this article; I know
+I learned several new nifty things while writing it.</p>
+
+<p><strong>Disclaimer</strong>: it is possible, when mucking around with the text system, to
+send applications messages they aren&#8217;t expecting. This can cause them to
+crash. As long as you stick to standard text selectors, you should be fine,
+but I&#8217;m not responsible if your program crashes because of a binding you add.</p>
+
+<h2 id="terminology">Terminology</h2>
+
+<p>Before delving too deeply into the intricacies of the Cocoa text system, it
+helps to understand some programmer jargon.</p>
+
+<ul>
+<li><p>The <strong><em><a href="http://en.wikipedia.org/wiki/Insertion_point">Insertion Point</a></em></strong> (sometimes called the <em>caret</em>)
+is the blinking vertical line that shows where text typed into a text box
+will show up.</p></li>
+<li><p>A <strong><em>Buffer</em></strong> is the text field currently being edited. This might be a
+text box in an online form in Safari, or the main window in TextEdit.</p></li>
+<li><p><strong><em><a href="http://en.wikipedia.org/wiki/Keyboard_shortcut">Key Bindings</a></em></strong>, often called &#8216;keyboard shortcuts&#8217;,
+define what happens when any key is typed in an application. For instance,
+in a Mac text editor, the &#8216;a&#8217; key inserts an <code>a</code>, &#8216;Opt-e, e&#8217; inserts an
+<code>é</code>, and &#8216;Ctrl-a&#8217; moves the insertion point to the beginning of the
+current line.</p></li>
+<li><p>A <strong><em><a href="http://en.wikipedia.org/wiki/String_%28computer_science%29">String</a></em></strong> is a chunk of text, literally a &#8216;string&#8217; of
+letters.</p></li>
+<li><p>A <strong><em><a href="http://en.wikipedia.org/wiki/Method_%28computer_science%29">Method</a></em></strong> is a function that an object (which includes
+just about everything in Cocoa) can perform.</p></li>
+<li><p>A <strong><em>Selector</em></strong> is the name of a method. It is a string. Something like
+<code>"insertTab:"</code>, or <code>"save:"</code></p></li>
+<li><p>The <strong><em>Mark</em></strong> is an invisible point somewhere in the document, which can
+be set, and then returned to. Marking is the way regions of text were
+selected in UNIX text editors back in the days before they could be
+highlighted in blue with a mouse drag.</p></li>
+<li><p>To <strong><em>Kill</em></strong> some text is basically the same as using the &#8216;Cut&#8217; command,
+but in OS X uses a separate mechanism, that is localized to the current
+buffer. By default &#8216;Ctrl-k&#8217; kills everything after the insertion point on
+the current line.</p></li>
+<li><p><strong><em>Yank</em></strong> is the analog of the &#8216;Paste&#8217; command. By default, &#8216;Ctrl-y&#8217;
+yanks back whatever was most recently killed.</p></li>
+</ul>
+
+<p>Many of these terms crop up in the venerable <a href="http://en.wikipedia.org/wiki/Emacs">Emacs</a> editor, so reading
+about them in the Emacs context can be enlightening: <a href="http://www.cs.cmu.edu/cgi-bin/info2www?(emacs)Buffers">Buffer</a>,
+<a href="http://www.cs.cmu.edu/cgi-bin/info2www?(emacs)Key%20Bindings">Key Bindings</a>, <a href="http://www.cs.cmu.edu/cgi-bin/info2www?(emacs)Mark">Mark</a>, <a href="http://www.cs.cmu.edu/cgi-bin/info2www?(emacs)Killing">Kill</a></p>
+
+<h2 id="existing_default_functionality">Existing (Default) Functionality</h2>
+
+<p>Most users of Mac OS X, even long-time Apple geeks, know only a fraction of
+the available text system shortcuts. This is a tragedy, as they are consistent
+across all applications which use the Cocoa text system, including TextEdit,
+Mail, iChat, Safari, and countless third-party applications.</p>
+
+<h3 id="simple_text_insertion">Simple Text Insertion</h3>
+
+<p>One thing every user knows is that when a plain letter is typed (assuming the
+input method in use matches the keyboard), that letter is inserted into a
+selected text box. When the shift key is held down, letters are capitalized,
+and symbol keys input the second symbol shown on them. For instance &#8216;Shift-]&#8217;
+inputs the &#8216;}&#8217; character.</p>
+
+<p>It is possible to see all of the possibilities using the
+&#8216;<a href="http://www.apple.com/macosx/tips/keyboard11.html">Keyboard Viewer</a>&#8217; palette:</p>
+
+<p><img src="Images/full-kb.png" alt="Keyboard viewer--full sized" title="" />
+<img src="Images/laptop-kb.png" alt="Keyboard viewer--laptop" title="" /></p>
+
+<p>In addition, the option key, both alone and in conjunction with the shift key,
+will change the characters inserted. So &#8216;Option-y&#8217; inserts a &#8216;&yen;&#8217; currency
+mark, and &#8216;Option-Shift-c&#8217; inserts a capital cedilla: &#8216;&Ccedil;&#8217;. We can see
+how option affects our input options using the Keyboard Viewer:</p>
+
+<p><img src="Images/full-kb-opt.png" alt="Keyboard viewer--full sized--option key" title="" />
+<img src="Images/full-kb-opt-shift.png" alt="Keyboard viewer--full sized--shift+option" title="" /></p>
+
+<p>Users with full keyboards have a complete number pad, with an enter key
+(instead of return), and symbols used in arithmetic. This number pad is
+available to PowerBook and iBook users as well. The numlock key (Fn-F6),
+enables the small symbols printed at the lower right corner of powerbook keys
+to be input. But even more usefully, those keys can also be used as a number
+pad while the Fn key is held down. This is great for typing lots of numeric
+data, and also comes in handy when playing games that allow vertical,
+horizontal, and diagonal movement via the number pad:</p>
+
+<p><img src="Images/laptop-kb-fn-numpad.png" alt="Keyboard viewer--laptop--function key" title="" /></p>
+
+<p>Of course, there are a number of standard actions that the above pictures
+don&#8217;t show.  For instance, when you type &#8216;Command-left&#8217;, the insertion
+point moves to the beginning of the current line.  Also, OS X has a fairly 
+large number of unix/emacs bindings built in.</p>
+
+<p>The complete list of these extra commands takes up too much space for this 
+page, so I&#8217;ve made them into a <a href="system-bindings.html">separate document</a>.</p>
+
+<h2 id="default_key_bindings">Default key bindings</h2>
+
+<p>OS X has three main files which specify the key bindings used by Cocoa
+applications:</p>
+
+<pre><code>/System/Library/Frameworks/AppKit.framework/Resources/StandardKeyBinding.dict
+
+/Library/KeyBindings/DefaultKeyBinding.dict
+
+~/Library/KeyBindings/DefaultKeyBinding.dict
+</code></pre>
+
+<p>which contain, respectively, the default &#8216;built-in&#8217; key bindings, system-wide
+custom keybindings, and a user&#8217;s personalized key bindings. Don&#8217;t edit the
+built-in <code>/System/Library/</code> file, as this could seriously hose your machine.
+Note that as usual, personalized bindings override the built-in standards.</p>
+
+<p>If the <code>DefaultKeyBinding.dict</code> file doesn&#8217;t exist, don&#8217;t worry. Simply making
+a <code>KeyBindings</code> folder in <code>~/Library</code>, and then adding a new text file should
+do the trick.</p>
+
+<h3 id="file_format">File Format:</h3>
+
+<p>This file is a normal <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/PropertyLists/PropertyLists.html#//apple_ref/doc/uid/10000048">Property List</a>, which can be created
+either with a text editor, such as <a href="http://www.barebones.com/products/textwrangler/index.shtml">TextWrangler</a>, <a href="http://smultron.sourceforge.net/">Smultron</a>,
+or <a href="http://macromates.com/">TextMate</a>, or with Apple&#8217;s Property List Editor, which is installed
+with the developer tools. Property lists are pervasive in OS X, and are used
+for all sorts of configuration files, and preferences. Any file which has a
+<code>.plist</code> or <code>.dict</code> extension is a property list. Every application has an
+<code>info.plist</code> file inside of it which tells OS X what types of files that
+application can handle. Smart folders (<code>.savedSearch</code> files) are property
+lists. The <code>defaults</code> command, which can be run from the terminal, is a quick
+way to edit single items in a property list.</p>
+
+<p>There are two types of property lists, old-style NeXT text files, and newer
+XML formatted files. I will use the old-style plists in this how-to, because
+they are easier to read and understand; they are more compact, with less
+distracting markup.</p>
+
+<p><strong>The NeXT property list format</strong> is a file format that can describe, using
+plain text, all of the objects used in Cocoa programs. We specifically care
+about 3 types: &#8216;strings&#8217;, &#8216;lists&#8217;, and &#8216;dictionaries&#8217;:</p>
+
+<ul>
+<li><p>A <em>string</em> is simply a sequence of letters, numbers, and symbols,
+such as:</p>
+
+<pre><code>"this is a string with some $#@! symbols"
+</code></pre></li>
+<li><p>A <em>list</em> is, like it sounds, a list of other objects, such as
+lists or strings:</p>
+
+<pre><code>("a", "list", "can", "contain", "many", "strings")
+</code></pre></li>
+<li><p>A <em>dictionary</em> contains pairs of &#8220;keys&#8221; and &#8220;values&#8221;.  Basically,
+dictionaries provide a way to name a bunch of objects, and refer
+to them by name.  Note that while dictionary keys must be strings,
+the values can be any type of object.</p>
+
+<pre><code>{"key1" = "value1"; "key2" = "value2"; "key3" = ("a", "list");}
+</code></pre></li>
+<li><p>In addition, <em>comments</em> can be added to old-style property lists
+by enclosing some text in <code>/*</code> and <code>*/</code></p></li>
+</ul>
+
+<p>Every property list has a root dictionary object, which can contain
+sub-objects. A simple plist file might look like:</p>
+
+<pre><code>{
+    /*  ** THIS IS A COMMENT: **
+     * 
+     * Notice that each line in the dictionary has a 'key' string,
+     * and a 'value', which can be a string, a list, or another
+     * dictionary.
+     */
+
+    "My String" = "Hey there!";
+
+    "My List" = ("first string", "second string", "final string");
+
+    "My Dictionary" = {
+        "Sub-string A" = "This is a string inside a dictionary";
+        "Sub-list B" = ("This is a list", "inside a dictionary");
+    };
+}
+</code></pre>
+
+<p>This property list has three key-value pairs: a string, a list, and a
+dictionary.</p>
+
+<h3 id="the_format_of_defaultkeybindingdict">The format of DefaultKeyBinding.dict</h3>
+
+<p>The <code>DefaultKeyBindings.dict</code> file is fairly straight-forward. It is a normal
+property list, which as keys, uses the requested key bindings, and as values
+uses the commands they should execute. For instance, I might want the letter
+<code>a</code> to not type &#8216;a&#8217;, but instead insert a tab. If I put the following in my
+<code>DefaultKeyBinding.dict</code>, then all Cocoa apps launched afterwards will insert
+a tab key instead of an <code>a</code>:</p>
+
+<pre><code>{
+    /* This will make all a's turn to tabs.  Beware. */
+    "a" = "insertTab:";
+}
+</code></pre>
+
+<h4 id="how_to_represent_bindings">How to represent bindings</h4>
+
+<p>But of course, if we could only bind things to letter keys, this wouldn&#8217;t
+really be so useful, now would it? Fortunately, Apple&#8217;s engineers made sure
+that every key that you could possibly ever type can be put into a binding.</p>
+
+<p>The way it works is simple. For lower-case and capital letters, simply type
+the letter into the string. So <code>"y"</code> represents the &#8216;y&#8217; key, while <code>"T"</code>
+represents &#8216;Shift-t&#8217;. For numbers and symbols, including space, the same
+holds. So <code>"!"</code> represents &#8216;Shift-1&#8217;, or however you type &#8216;!&#8217; on your keyboard
+layout. To add modifier keys, add a symbol corresponding to that modifier:</p>
+
+<blockquote>
+  <p><code>"@t"</code> = Command-t <br />
+    <code>"^t"</code> = Control-t <br />
+    <code>"~t"</code> = Option-t <br />
+    <code>"@^T"</code> = Command-Control-Shift-t <br />
+    <code>"~ "</code> = Option-space</p>
+</blockquote>
+
+<p>For numbers and symbols, to add the shift key is not as easy as typing a
+capital letter, so <code>$</code> stands for shift. Also, there is a difference between
+numbers above the letter keys, and numbers on the keypad. To indicate keypad
+keys, use <code>#</code>:</p>
+
+<blockquote>
+  <p><code>"@$#5"</code> = Command-Shift-Numpad 5 <br />
+    <code>"^6"</code> = Control-6</p>
+</blockquote>
+
+<p><strong>Note:</strong> Lots of bindings with the Command key won&#8217;t work.  This is done by
+Apple to ensure that applications can use these shortcuts for themselves, and
+not worry about user key bindings.  Some will work, however, such as
+&#8216;Command-right arrow&#8217;.</p>
+
+<p>There are still 2 limitations: First, what do we do if we want to bind a
+literal &#8216;@&#8217; or &#8216;#&#8217; symbol? We <em>escape</em> it! By adding a <code>\\</code> before the symbol,
+we can avoid this. At the moment, the only way I can get ‘\’ itself to bind to
+anything is by writing it as ‘\U05C’.</p>
+
+<blockquote>
+  <p><code>"~\\$"</code> = Option-$    </p>
+</blockquote>
+
+<p>Second, if we were limited to symbols and modifiers, we would still cut off
+keys like &#8216;delete&#8217;, &#8216;tab&#8217;, and &#8216;esc&#8217;, so any keys that aren&#8217;t already covered
+can be entered using their unicode values:</p>
+
+<h4 id="unicode_values_for_apple_non_letter_keys">Unicode values for Apple non-letter keys:</h4>
+
+<table>
+<tr><td>Escape:</td>        <td><code>\U001B</code></td></tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td>Tab:</td>           <td><code>\U0009</code></td></tr>
+<tr><td>Backtab:</td>       <td><code>\U0019</code></td></tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td>Return:</td>        <td><code>\U000A</code></td></tr>
+<tr><td>Enter:</td>         <td><code>\U000D</code></td></tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td>Delete:</td>        <td><code>\U007F</code></td></tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td>Up Arrow:</td>      <td><code>\UF700</code></td></tr>
+<tr><td>Down Arrow:</td>    <td><code>\UF701</code></td></tr>
+<tr><td>Left Arrow:</td>    <td><code>\UF702</code></td></tr>
+<tr><td>Right Arrow:</td>   <td><code>\UF703</code></td></tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td>Help:</td>          <td><code>\UF746</code></td></tr>
+<tr><td>Forward Delete:</td><td><code>\UF728</code></td></tr>
+<tr><td>Home:</td>          <td><code>\UF729</code></td></tr>
+<tr><td>End:</td>           <td><code>\UF72B</code></td></tr>
+<tr><td>Page Up:</td>       <td><code>\UF72C</code></td></tr>
+<tr><td>Page Down:</td>     <td><code>\UF72D</code></td></tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td>Clear:</td>         <td><code>\UF739</code></td></tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td>F1:</td>            <td><code>\UF704</code></td></tr>
+<tr><td>F2:</td>            <td><code>\UF705</code></td></tr>
+<tr><td>F3:</td>            <td><code>\UF706</code></td></tr>
+<tr><td>&#8230;</td>            <td></td></tr>
+<tr><td>F35 </td>           <td><code>\UF726</code></td></tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td colspan=2><em>Not on Apple keyboards:</em></td></tr>
+<tr><td colspan=2>&nbsp;</td></tr>
+<tr><td>Menu:</td>          <td><code>\UF735</code></td></tr>
+</table>
+
+<p><strong>Notes:</strong></p>
+
+<ul>
+<li>&#8216;Backtab&#8217; is &#8216;Shift-Tab&#8217;</li>
+<li>The key labeled &#8216;Backspace&#8217; on most PC  keyboards is the &#8216;Delete&#8217; key</li>
+<li>The &#8216;Num Lock&#8217; key on PC keyboards is &#8216;Clear&#8217;</li>
+<li>The keys labeled &#8216;Print Screen&#8217;, &#8216;Scroll Lock&#8217;,  and &#8216;Pause&#8217; are 
+respectively &#8216;F13&#8217;, &#8216;F14&#8217;, and &#8216;F15&#8217;</li>
+<li>The key labeled &#8216;Insert&#8217; is the &#8216;Help&#8217; key</li>
+<li>I&#8217;m not sure whether the &#8216;Menu&#8217; key actually does anything, as I don&#8217;t own 
+a keyboard with that key on it.</li>
+</ul>
+
+<p>For a complete list, including some keys that aren&#8217;t on current apple 
+keyboards, but can still be used by OS X, see the <a href="http://www.unicode.org/Public/MAPPINGS/VENDORS/APPLE/CORPCHAR.TXT">Registry</a>
+of Apple Unicode corporate-zone characters.</p>
+
+<p>In general, the best way I&#8217;ve found to discover key&#8217;s escape codes is to use
+the free <a href="http://www.petermaurer.de/nasi.php?section=keycodes">Key Codes</a> application from Peter Maurer. The app brings
+up a floating palette which prints a log of all the keys typed.</p>
+
+<h4 id="more_complicated_bindings_and_actions">More complicated bindings and actions</h4>
+
+<p>Of course, sometimes we wish we had more keys on the keyboard. Even with all
+of the modifier keys, it gets hard to keep different functionality separated,
+and things get confused. For this reason, it is possible to use
+multiple-keystroke bindings. To this end, instead of binding our first
+keystroke to a selector, we bind it to a dictionary, containing the second
+keystrokes. Emacs, the UNIX-based text editor, has many such
+multiple-keystroke bindings. Therefore, as an example of how this can be done,
+we will take Emacs bindings, and try to replicate them in Cocoa Text Widgets.</p>
+
+<p>One Emacs command is &#8216;Control-x, u&#8217;, for &#8216;undo&#8217;. Another is &#8216;Control-x,
+Control-s&#8217; for &#8216;save&#8217;. To add this command to our key bindings, we need to
+bind &#8216;Control-x&#8217; to a dictionary of sub-bindings:</p>
+
+<pre><code>{
+    /* Control-x dictionary */
+    "^x  " = {
+        "u"  = "undo:";          /* C-x u    =&gt;  undo */
+        "^s" = "save:";  /* C-x C-s  =&gt;  save */
+    };
+}
+</code></pre>
+
+<p>Our &#8216;Control-x&#8217; parent dictionary can have several multiple-keystroke bindings
+associated with it. In this way, we can have whole areas of functionality
+given to one &#8216;parent&#8217; key binding, with the resulting action to be determined
+by a letter. We can effectively have 4 or 5 keyboards for our bindings!</p>
+
+<p>But of course, the number of bindings is not our only limitation so far. We
+are also limited by the range of selectors offered by the text box. We often
+find ourselves performing complicated actions repeatedly, and would like to
+invoke them with single keystroke. Mostly when this happens, Applescript, or
+some other programming language is the best solution. On occasion, however,
+the text system has enough power and flexibility to do the trick. This is
+because, besides single selectors, a binding can also execute a list of
+selectors, sequentially.</p>
+
+<p>As an example, imagine that I often want to change paragraphs of text to all
+capital letters, but I&#8217;m tired of selecting the whole paragraph with my
+keyboard or mouse. I want &#8216;Control-Option-u to make my paragraph all
+uppercase, and then I want it to start a new paragraph by inserting two new
+lines at the end of the paragraph.</p>
+
+<p>This (somewhat contrived) action can be broken into steps: 1. Select paragraph
+2. Make all the letters uppercase 3. Move to the end of the paragraph 4.
+Insert two new lines.</p>
+
+<p>We can make a plist of these directions:</p>
+
+<pre><code>{
+    "^~u" = ("selectParagraph:",
+             "uppercaseWord:",
+             "moveToEndOfParagraph:"
+             "insertNewline:",
+             "insertNewline");
+}
+</code></pre>
+
+<p>So, with the the ability to map multiple-keystroke bindings to sets of actions
+that can perform complicated behaviors, what&#8217;s left?</p>
+
+<p>Every time you type a key, the Cocoa text system looks for bindings, and if
+none are found for the key, it instead passes the keystroke along as a string
+input to the <code>insertText:</code> selector. Well, as luck would have it,
+<a href="http://kevin.sb.org/">Kevin Ballard</a>, from the <a href="irc://irc.freenode.net/##textmate">##textmate</a> IRC channel on
+<a href="http://freenode.net/">freenode</a> (a delightful place to chat, incidentally), found a real
+gem, that doesn&#8217;t seem to be documented anywhere on Apple&#8217;s website, or
+anywhere else: <strong>It is possible to use the <code>insertText:</code> selector as part of a
+binding, and thereby bind an arbitrary string to a keystroke.</strong> If we bind a
+key to a list, containing <code>"insertText:"</code> as one of its strings, the next
+string in the list will be inserted into the text field. Example:</p>
+
+<pre><code>{
+    /* Realize that actually using this will render your a key
+       amusingly useless.*/
+    "a" = ("insertText:", "some fun text", "moveWordBackward:");
+}
+</code></pre>
+
+<p>as a DefaultKeyBinding.dict file will make the &#8216;a&#8217; key type &#8216;some fun text&#8217;,
+and then move the insertion point to the beginning of the word &#8216;text&#8217;, instead
+of the simply typing an &#8216;a&#8217;, as usual.</p>
+
+<p>This is amazingly useful if there are some symbols or strings which must be
+entered on a regular basis. For instance, imagine that I sometimes need to
+type LaTeX Greek letters, and also sometimes need the associated unicode
+symbols (for alpha, beta, etc.). The following <code>DefaultKeyBinding.dict</code> could
+reduce this load considerably:</p>
+
+<pre><code>{
+    /* Greek unicode letters */
+    "^g" = {
+        "a" = ("insertText:", "\U03B1");
+        "b" = ("insertText:", "\U03B2");
+        "g" = ("insertText:", "\U03B3");
+        "d" = ("insertText:", "\U03B4"); /*
+        ...                               */
+    }
+
+    /* Greek LaTeX letters */
+    "^m" = {
+        "a" = ("insertText:", "\\alpha");
+        "b" = ("insertText:", "\\beta");
+        "g" = ("insertText:", "\\gamma");
+        "d" = ("insertText:", "\\delta"); /*
+        ...                               */
+    }
+}
+</code></pre>
+
+<p>Now, when I type &#8216;Control-g, a&#8217;, &#8216;&alpha;&#8217; will be inserted instead, and when
+I type &#8216;Control-m, g&#8217;, &#8216;\gamma&#8217; will be inserted, etc.</p>
+
+<p>It seems like this behavior is just an exception, as I haven&#8217;t found any other
+selectors which take an argument, but it&#8217;s a glorious exception, for which I
+can envision some truly creative uses.</p>
+
+<p>For instance, if I want to drive some friends bonkers, I could set
+<code>DefaultKeyBinding.dict</code> up to <a href="http://en.wikipedia.org/wiki/ROT13">ROT13</a> all of my letters, to enable
+&#8220;typing in code&#8221;. Or I could set it up to allow typing in <a href="http://en.wikipedia.org/wiki/Leet">leetspeak</a>
+(&#8220;1337&#8221;).</p>
+
+<p>Most obviously perhaps, I could bind common phrases or code snippets to simple
+keystrokes. This would allow systemwide text shortcuts without the need for
+third-party applications (though the third party applications out there,
+notably Peter Maurer&#8217;s <a href="http://www.petermaurer.de/nasi.php?section=textpander">Textpander</a>, do a lot more than key
+bindings allow).</p>
+
+<p>One binding that I made, and <strong>it&#8217;s one of my favorites</strong>, allows me to type
+html and xml tags with ease. I have Control-shift-h make a starting and tag
+pair out of the word I&#8217;ve just finished typing, and put the cursor in the
+middle of them. Here&#8217;s the code:</p>
+
+<pre><code>{
+    /* This command will let Ctrl-Shift-H turn the previous word
+     * into an HTML/XML opening and closing tag pair. */
+    "^H" = ( "setMark:",
+             "moveWordBackward:",
+             "deleteToMark:",
+             "insertText:", "&lt;",
+             "yank:",
+             "insertText:", "&gt;",
+             "setMark:",
+             "insertText:", "&lt;/",
+             "yank:",
+             "insertText:", "&gt;",
+             "swapWithMark:");
+}
+</code></pre>
+
+<p>Finally, the possibilities for pranks on coworkers, significant others, etc.
+is considerable. For instance, we can set the keyboard up to malfunction on a
+couple of letters, maybe a &#8216;z&#8217; could <a href="http://www.apple.com/macosx/features/speech/">say</a> &#8220;you didn&#8217;t
+*really* want to type that, did you?&#8221;:</p>
+
+<pre><code>{
+    "z" = ("setMark:",
+           "insertText:",
+           "you didn't *really* want to type that, did you?",
+           "selectToMark:",
+           "speakText:");
+}
+</code></pre>
+
+<p>Moving right along, now that we have the idea of how to form our bindings, we
+can get to figuring out exactly which selectors are available to us.</p>
+
+<h3 id="usable_selectors">Usable selectors</h3>
+
+<p>It is hard to figure out exactly which selectors a text box, and more
+generally, an application, will respond to. There are a huge number of
+options, but they are not all documented in one place. This is partly because
+if one object in an application doesn&#8217;t respond to a particular message, it
+will pass the message along to its parent object.</p>
+
+<p>Still, we can find a large number of useful selectors by searching through the
+documentation we can find, and testing what the selectors do. The biggest
+source of selectors that we might want to use is in the NSResponder class &#8212;
+see its <a href="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSResponder.html">documentation</a>. Specifically, we care about the
+&#8216;Action methods&#8217; section. Also, the <a href="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSText.html">documentation</a> for
+NSText has some selectors we can use, and many other classes provide useful
+selectors as well, such as NSDocumentController and NSWindow.</p>
+
+<p>Because there are so many usable selectors, I&#8217;m putting them in a separate
+page.  <a href="selectors.html">Here&#8217;s a link</a>.</p>
+
+<h3 id="examples">Examples</h3>
+
+<p>I&#8217;ve put together some examples of how this could be used. To use one of
+these, simply rename the file to <code>DefaultKeyBinding.dict</code> and plop it in the
+<code>~/Library/KeyBindings</code> folder. One of the most common uses of custom key
+bindings is emulating another operating system or environment, such as Windows
+or Emacs or BBEdit:</p>
+
+<ul>
+<li>Emacs emulation <a href="KeyBindings/Emacs Esc Bindings.dict">key bindings with esc as meta key</a></li>
+<li>Emacs emulation <a href="KeyBindings/Emacs Opt Bindings.dict">key bindings with opt as meta key</a></li>
+<li>BBEdit emulation <a href="KeyBindings/BBEdit Bindings.dict">key bindings</a> (far 
+from complete)</li>
+<li>Windows emulation <a href="KeyBindings/Windows Bindings.dict">key bindings</a>
+(<em>I&#8217;m still working on this one, if someone has a list of windows
+default key behaviors, email me: jacobolus [at] gmail.com</em>)</li>
+</ul>
+
+<p>Beyond that, it&#8217;s possible make key bindings as pranks.  That&#8217;s always fun:</p>
+
+<ul>
+<li><a href="KeyBindings/Leet Bindings.dict">Leet bindings</a></li>
+<li><a href="KeyBindings/Greek Bindings.dict">Greek bindings</a></li>
+</ul>
+
+<h2 id="text_system_defaults">Text System Defaults</h2>
+
+<p>Besides making our own key bindings, there are a few other nifty changes we
+can apply to the Cocoa text system, using the &#8220;defaults&#8221; system. Apple&#8217;s
+developer site <a href="http://developer.apple.com/documentation/Cocoa/Conceptual/BasicEventHandling/Tasks/TextDefaultsAndBindings.html">tells about them</a>. Some of
+these defaults are for unimplemented features, and are therefore worthless to
+us. There are three defaults however which are of interest to us here. They
+can be set using the <code>defaults</code> terminal command. I will show them applying
+globally with the <code>-g</code> flag, but it is possible to set them on an application
+by application basis, by for instance specifying <code>com.apple.textedit</code> instead
+of <code>-g</code>.</p>
+
+<ul>
+<li><p><code>NSTextKillRingSize</code></p>
+
+<p>This default sets the size of the kill ring.  It can be set as follows:</p>
+
+<pre><code>defaults write -g NSTextKillRingSize -string 4
+</code></pre>
+
+<p>This changes the size of the &#8220;kill ring&#8221; which large deleted blocks of
+text get copied to. In this case, I have set it to keep track of the 4
+most recent such blocks. This means that this text can be cycled through,
+and won&#8217;t be lost as soon as more text is killed. An extra binding is
+useful in dealing with a kill ring: <code>yankAndSelect:</code>, which cycles through
+the kill ring.</p></li>
+<li><p><code>NSRepeatCountBinding</code></p>
+
+<p>This one is one of the coolest features of the text system. In emacs,
+pressing &#8220;Control-u&#8221;, and then a number, 94 say, and then any other
+command, will repeat that command 94 times. It is possible to set OS X to
+do the same thing with &#8220;Control-u&#8221; as follows:</p>
+
+<pre><code>defaults write -g NSRepeatCountBinding -string "^u"
+</code></pre>
+
+<p>Of course, any other binding could be set instead of &#8220;Control-u&#8221;.</p></li>
+<li><p><code>NSQuotedKeystrokeBinding</code></p>
+
+<p>This default is normally linked to Control-q. It causes the next
+keystroke typed to be passed through the system, without activating any
+bindings.  For example, if the &#8220;Option-v&#8221; is bound to scroll up in the
+key bindings file, a square root sign &#8212; √ &#8212; can still be entered by 
+typing &#8220;Control-q, Option-v&#8221;.</p></li>
+</ul>
+
+<h2 id="input_managers">Input Managers</h2>
+
+<p>NeXT and Apple realized, when they created Cocoa, that many actions could not
+be foreseen by their framework developers. The key binding system is great if
+we want to stick within the usual sorts of operations on English text, such as
+transposing two letters, skipping the end of a paragraph, or upper-casing a
+word, and we can combine these simple actions, but sometimes to do what we
+want requires more.</p>
+
+<p>An <em>input manager</em> is a piece of code which is loaded into every running Cocoa
+application. The purpose of an input manager is to extend the text system in
+ways not thought of by the application&#8217;s original programmers.</p>
+
+<p>We&#8217;ve all been hearing of late about how input managers can be used for
+nefarious purposes, but as long as they stick to modifying the text system,
+they mostly stay out of trouble, and they can be incredibly useful. Two input
+managers in particular are quite popular:</p>
+
+<ul>
+<li><p>First,  Mike Ferris&#8217;s <a href="http://www.lorax.com/FreeStuff/TextExtras.html">TextExtras</a> extends the Cocoa
+text system in ways that programmers, particularly, will find
+useful.  I haven&#8217;t spent too much time playing with TextExtras,
+especially since <a href="http://macromates.com/">TextMate</a>, my editor of choice,
+doesn&#8217;t quite use the same Cocoa controls as other Cocoa-based
+editors like <a href="http://www.codingmonkeys.de/subethaedit/">SubEthaEdit</a> and <a href="http://smultron.sourceforge.net/">Smultron</a>.  But
+TextExtras adds quite a bit to the Cocoa text system, including
+indent wrapping, auto-indentation, showing and selecting matching
+braces, improved completion, and, perhaps most of all, customized
+piping of text through shell commands.  This allows all sorts of
+snazzy behavior (note that editors like <a href="http://www.barebones.com/products/textwrangler/index.shtml">TextWrangler</a> and
+<a href="http://macromates.com/">TextMate</a> have their own implementations of this feature).</p></li>
+<li><p>Second, one of my favorite text-system extensions is
+<a href="http://michael-mccracken.net/">Michael McCracken</a>&#8217;s <a href="http://leverage.sourceforge.net/wiki/index.php/Main_Page">Incremental Search Input Manager</a> 
+(ISIM).  Here&#8217;s a <a href="http://michael-mccracken.net/IncrementalSearchInputManager-universal.zip">link to a zip-file of the universal binary</a>.</p>
+
+<p>ISIM is an input manager that provides three new selectors for binding in
+our <code>DefaultKeyBinding.dict</code> file: <code>ISIM_incrementalSearch:</code>, 
+<code>ISIM_reverseIncrementalSearch:</code>, and <code>abort:</code> (that last one may
+work for other things, I&#8217;m not sure).  The idea is pretty simple, but
+incredibly useful.  Basically, when the selector is invoked, a little
+window pops up at the bottom of the current text box.  When you type
+into this little window, ISIM searches through the current document
+searching for text that matches, and selects the first occurrence of
+such text.  Repeatedly invoking the selector flips through any other
+occurrences in the document.  A picture can say this better than I can:</p>
+
+<p><img src="Images/incremental-search.png" alt="Incremental Search Input Manager" title="" /></p>
+
+<p>The relevant part of my key bindings file looks like this:</p>
+
+<pre><code>/* Incremental search */
+"^s"        = "ISIM_incrementalSearch:";
+"^r"        = "ISIM_reverseIncrementalSearch:";
+"^$g"        = "abort:";
+</code></pre></li>
+<li><p>Finally, for those who can&#8217;t get enough customization in a straight
+NSTextView, using the techniques described already, Gus Mueller made an
+input manager, described in two <a href="http://www.gusmueller.com/blog/archives/2004/2/5.html">blog</a> <a href="http://www.gusmueller.com/blog/archives/2005/12/17.html">posts</a>, which
+allows the contents of any Cocoa text field to BBEdit. Type the relvant
+key, and your text will pop up in a new BBEdit document. Save, and the
+text in the original text field is updated. It&#8217;s awesome. According to the
+second post, modifying it to work with any editor which uses the ODBEditor
+suite (used mainly by FTP programs to open remote files in a local text
+editor) would be easy&#8212;it&#8217;s open source.</p>
+
+<p>TextMate, my editor of choice, comes with a similar input manager, I
+believe inspired by the first one.  And the great thing about TextMate&#8217;s 
+version is that it works in Mail (I&#8217;m not sure, but I think Gus&#8217;s 
+doesn&#8217;t).  If there&#8217;s a text editor you like, it&#8217;s extremely nice to be
+able to edit Safari form fields, emails, and other text using that editor.</p></li>
+</ul>
+
+<h2 id="even_lower_level_hacking_keyboard_layouts">Even Lower-Level Hacking: Keyboard Layouts</h2>
+
+<p>First, we haven&#8217;t seen any way to remap modifier keys so far.  This can be 
+easily accomplished using the Keyboard and Mouse preference pane.  Click the
+&#8216;modifier keys&#8217; button at the bottom of the view, and a nice sheet pops up.
+Mine, which I&#8217;ve set to put the keys on a <a href="http://en.wikipedia.org/wiki/Model_M_Keyboard">Model M</a> keyboard in the
+right places, with &#8216;Control&#8217; where it belongs next to the &#8216;A&#8217; key, looks like
+this:</p>
+
+<p><img src="Images/keyboard-pref-pane.png" alt="Keyboard Pref Pane" title="" /></p>
+
+<p>For even finer control over the keyboard, it is possible to create
+<a href="http://developer.apple.com/technotes/tn2002/tn2056.html">customized keyboard layouts</a>. These allow any unicode glyphs
+to be mapped to the keys on the keyboard, so alternate language scripts can be
+entered, etc. This will work across the OS, not just in Cocoa text editors,
+but is also a much lower-level change, which means that messing it up could be
+much worse. I haven&#8217;t actually ever used any layouts other than U.S. on my
+PowerBook, so I don&#8217;t know how easy this is. There is a pretty nice GUI
+editor for this from SIL called <a href="http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&amp;id=ukelele">Ukelele</a>.  It has great
+documentation, and should be all that is needed to make custom keyboard
+layouts.</p>
+
+<p>Finally, for the truly adventurous, it is apparently possible to go even
+lower-level than Ukelele, and patch the <a href="http://developer.apple.com/documentation/mac/Devices/Devices-203.html">ADB</a> codes which are registered
+by Apple&#8217;s USB keyboard drivers. I&#8217;m not sure exactly which versions of OS
+X this works with, and any hacking at this level requires a serious 
+disclaimer, as a wrong move here could really mess up your system. But here
+<a href="http://www.snark.de/index.cgi/0007">are</a> <a href="http://www.snark.de/mac/usbkbpatch/index_en.html">two</a> links at snark.de which discuss such arcane 
+trickery. Good luck to any who try this.  This same guy (Heiko Hellweg) also
+<a href="http://www.snark.de/index.cgi/0006">made his own</a>  keyboard layout, and patched Apple&#8217;s keyboard drivers
+to give himself a meta key:</p>
+
+<blockquote>
+  <p>&#8220;I got myself the Tiger-Version of the ADB Keyboard Driver
+  (AppleADBKeyboard-238.3.4) and hacked away in XCode. My current setup uses
+  the obnoxious enter key (between the cursor keys and the right command
+  key) as the alt modifier (you can do that without a compiler by just
+  <a href="http://www.snark.de/index.cgi/0007">fiddling with info.plist</a>) and turns the original alt-key on the left
+  onto a META key that sends escape in front of every other key as long as
+  it is pressed (for this one, i needed to replace 
+  <code>/System/Library/Extensions/AppleADBKeyboard.kext</code> with an actual
+  modified binary).</p>
+
+  <p>&#8220;Now i can actually type ahead blindly without thinking twice. Contact me,
+  if you are interested in using this too.&#8221;</p>
+</blockquote>
+
+<p>Needless to say, I wouldn&#8217;t advise trying this, unless you know what you are 
+doing.</p>
+
+<h2 id="useful_links">Useful Links</h2>
+
+<p><em>TODO: Much of this list of links is still incomplete</em></p>
+
+<h3 id="text_editors">Text Editors</h3>
+
+<p>Free Cocoa text editors for OS X:</p>
+
+<ul>
+<li><a href="http://www.apple.com/support/mac101/work/23/">TextEdit</a> &#8212; Comes on every Mac</li>
+<li><a href="http://smultron.sourceforge.net/">Smultron</a> &#8212; Clean, simple, Open-source text editor.
+Named after some sort of Scandinavian strawberry.  Can&#8217;t beat free!</li>
+</ul>
+
+<p>Commercial Cocoa text editors:</p>
+
+<ul>
+<li><a href="http://macromates.com/">TextMate</a> &#8212; most awesome text editor ever.  I really can&#8217;t
+recommend this one enough.  If you type lots of text, whether it&#8217;s
+C or Python code, <a href="http://en.wikipedia.org/wiki/LaTeX">LaTeX</a>, <a href="http://daringfireball.net">John Gruber</a>&#8217;s
+<a href="http://daringfireball.net/projects/markdown/">Markdown</a>, or anything else, TextMate is amazing.  It uses a 
+different text box than the usual Cocoa one, so not all of the
+things discussed here will work, for instance, tying multiple commands
+to one binding, or using multiple keystroke commands.  Still, TextMate
+allows far more customization than NSText widgets in general, so
+custom system bindings aren&#8217;t as necessary.</li>
+<li><a href="http://www.codingmonkeys.de/subethaedit/">SubEthaEdit</a> &#8212; Nifty collaborative editor, which allows
+people halfway around the world from each-other to work on the same
+text file at once.  This editor kicks all kinds of ass when it comes
+to collaborative note taking, or pair programming.  It&#8217;s not too shabby
+for solo programming either.</li>
+</ul>
+
+<p>Non-Cocoa text editors for OS X:</p>
+
+<ul>
+<li><a href="http://www.barebones.com/products/textwrangler/index.shtml">TextWrangler</a> &#8212; Excellent (free!) editor from <a href="http://www.barebones.com/">Bare Bones</a>. <br />
+Not Cocoa, so the keybindings described in this how-to won&#8217;t work,
+but a great Mac citizen nonetheless, with lots of scriptability,
+and excellent documentation.</li>
+<li><a href="http://www.barebones.com/products/bbedit/index.shtml">BBEdit</a> &#8212; <a href="http://www.barebones.com/">Bare Bones</a>&#8217;s flagship editor.  $200, or
+$130 as an &#8220;upgrade&#8221; from the free TextWrangler, or $50 for
+educational users.  Steep pricing, but does most everything you&#8217;d
+ever expect a text editor to do, and more.  I think I still like
+TextMate better, but Mac users have sworn by BBEdit for almost as
+long as I&#8217;ve been alive.</li>
+</ul>
+
+<h3 id="apple_developer_documentation">Apple Developer Documentation</h3>
+
+<p>Apple has some documentation for the key bindings, but all in all it is far
+from adequate, especially for regular users, as opposed to competent
+Objective-C hackers.</p>
+
+<ul>
+<li><a href="http://developer.apple.com/documentation/Cocoa/Conceptual/InputManager/Concepts/KeyBindings.html#//apple_ref/doc/uid/20001037-DontLinkElementID_2050128a">About Key Bindings</a> &#8212; A brief note.</li>
+<li><a href="http://developer.apple.com/documentation/Cocoa/Conceptual/BasicEventHandling/Tasks/TextDefaultsAndBindings.html">Text System Defaults and Key Bindings</a>
+&#8212; A longer explanation of some of the possibilities with key
+bindings, which also shares some cool text system defaults,
+editable from the command line.</li>
+<li><a href="http://developer.apple.com/documentation/Cocoa/Reference/ApplicationKit/ObjC_classic/Classes/NSResponder.html">The NSResponder class</a> &#8212; The NSResponder
+class is chock full of useful selectors to try to bind keys to.</li>
+<li><a href="http://developer.apple.com/documentation/Cocoa/Conceptual/InputManager/index.html">Text Input Management</a> &#8212; This extensive
+article is far beyond the scope of this guide, and also only
+somewhat relevant.  It details the nitty gritty of the Cocoa
+Text system, including information on how to create your own
+input managers.</li>
+<li><a href="http://developer.apple.com/documentation/Cocoa/Conceptual/PropertyLists/PropertyLists.html#//apple_ref/doc/uid/10000048">Introduction to Property Lists</a> &#8212; Apple&#8217;s
+documentation of the property list format, covering both old-style
+and XML formats.</li>
+<li><a href="http://www.unicode.org/Public/MAPPINGS/VENDORS/APPLE/CORPCHAR.TXT">Registry of Apple use of Unicode corporate-zone characters.</a>
+&#8212; not at Apple.com, but this text document tells the unicode values
+of all the control keys we want to put in our bindings.</li>
+</ul>
+
+<h3 id="third_party_documentation">Third-party documentation</h3>
+
+<ul>
+<li>Llew Mason&#8217;s pretty good <a href="http://www.lsmason.com/articles/macosxkeybindings.html">explanation</a> of key bindings in OS X</li>
+<li>A page at <a href="http://www.cocoadev.com/index.pl?KeyBindings">Cocoa Dev</a> about them</li>
+<li>A page by &#8216;misaka&#8217; at <a href="http://www.deepsky.com/~misaka/MacOSX/KeyBindings.html">deepsky.com</a></li>
+<li>Shane Celis&#8217; description at <a href="http://www.gnufoo.org/macosx/macosx.html#emacs">gnufoo.org</a></li>
+<li><a href="http://www.algorithm.com.au/files/mac_os_x/DefaultKeyBinding.dict">An example key bindings file</a></li>
+<li>Michael C Thornburgh has some Vi-ish keybindings at his site,
+<a href="http://aldebaran.armory.com/~zenomt/macosx/KeyBindings.html">armory.com</a>, in xml plist format.</li>
+<li>David Pogue&#8217;s <a href="http://www.missingmanuals.com/pub/a/oreilly/missingmanuals/2003/keystrokes_0103.html">comparison</a> of keyboard shortcuts on Windows and on 
+the Mac.</li>
+</ul>
+
+<h3 id="key_bindings_editors">Key Bindings Editors</h3>
+
+<ul>
+<li>Gerd Knops&#8217;s <a href="http://www.cocoabits.com/KeyBindingsEditor/">Key Bindings Editor</a> is a Cocoa application which
+allows the viewing and editing of key bindings files. It knows where the
+system, XCode, and TextMate key bindings are, and allows html and plain
+text export. </li>
+<li>Mikael Langer&#8217;s <a href="http://www.mai.liu.se/~milan/TextMacro/">TextMacro</a> does some stuff which is no
+longer needed&#8230; it&#8217;s an input manager which allows arbitrary text to be
+input with key bindings, and is supposed to provide for multiple sets of
+key bindings which can be swapped out. It is implemented as a preference
+pane.</li>
+</ul>
+
+<h3 id="input_managers">Input Managers</h3>
+
+<ul>
+<li><a href="http://leverage.sourceforge.net/wiki/index.php/Main_Page">Incremental Search Input Manager</a></li>
+<li><a href="http://www.lorax.com/FreeStuff/TextExtras.html">TextExtras</a></li>
+<li><a href="http://homepage.mac.com/annard/FileSharing9.html">XML Tag Input Manager</a> &#8212; Annard Brouwer&#8217;s free input manager
+for selecting XML/HTML tags; it lets your mouse get in on the text system
+action.</li>
+</ul>
+
+<h3 id="tangentially_related_macosxhints_hints">Tangentially-related MacOSXHints hints</h3>
+
+<ul>
+<li><a href="http://www.macosxhints.com/article.php?story=2002060811285560"><em>Prewrap Lines in Mail.app</em></a> discusses TextExtras, and
+gives an example of an application.  </li>
+<li><a href="http://www.macosxhints.com/article.php?story=20021009063151561"><em>Find and replace special characters in Cocoa apps</em></a>
+&#8212; A hint by <a href="http://www.friday.com/bbum/">Bill Bumgarner</a> about <code>NSQuotedKeystrokeBinding</code>,
+which is Control-q by default.</li>
+<li><a href="http://www.macosxhints.com/article.php?story=20010729214616497">Enabling meta-key Emacs shortcuts in Cocoa apps</a> &#8212; this one
+isn&#8217;t really so tangential: it shows users how to get emacs emulation by
+putting installing a custom keybinding file (the emacs emulation is not
+nearly as complete as ours above ;-) ).</li>
+</ul>
+</div>
+<div id="email">Anything I can improve?  Send me an email: jacobolus AT gmail</div></body></html>

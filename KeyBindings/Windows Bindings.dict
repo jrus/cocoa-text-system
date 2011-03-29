@@ -1,0 +1,100 @@
+{
+ /* Keybindings for partial windows emulation.  Compiled by Jacob Rus.
+  * 
+  * Steve Jacobs did much of the work on this.
+  *
+  * Note that the bindings at the end, for Ctrl-a, Ctrl-n, etc.
+  * will override OS X defaults.  Remove that section if you like.
+  */
+
+
+/***** HOME-END KEYS *****/
+
+    "\UF729"    = "moveToBeginningOfLine:";         /* home         Beginning of line */
+    "\UF72B"    = "moveToEndOfLine:";               /* end          End of line */
+
+    "$\UF729"   = "moveToBeginningOfLineAndModifySelection:";
+                                                    /* Shft-home    Select to beginning of line */
+    "$\UF72B"   = "moveToEndOfLineAndModifySelection:";
+                                                    /* Shft-end     Select to end of line */
+
+    "^\UF729"   = "moveToBeginningOfDocument:";     /* C-home       Beginning of document */
+    "^\UF72B"   = "moveToEndOfDocument:";           /* C-end        End of document */
+    
+    "^$\UF729"  = "moveToBeginningOfDocumentAndModifySelection:";
+                                                    /* C-Shft-home  Select to beginning of document */
+    "^$\UF72B"  = "moveToEndOfDocumentAndModifySelection:";
+                                                    /* C-Shft-end   Select to end of document */
+
+/***** PAGE UP-PAGE DOWN KEYS *****/
+
+    "\UF72C"    = "pageUp:";                        /* page up      Page up */
+    "\UF72D"    = "pageDown:";                      /* page dn      Page down */
+    
+    "~\UF72C"   = "scrollPageUp:";                  /* O-pg up      Scroll page up */
+    "~\UF72D"   = "scrollPageDown:";                /* O-pg dn      Scroll page down */
+
+
+/***** DELETE-FORWARD DELETE KEYS *****/
+
+    "~\U007F"   = "undo:";                          /* O-Del        Undo */
+    "~$\U007F"  = "redo:";                          /* O-Shft-Del   Undo */
+
+    "^\U007F"   = "deleteWordBackward:";            /* C-Del        Delete word backward */
+    "^\UF728"   = "deleteWordForward:";             /* C-FwdDel     Delete word forward */
+
+
+/***** DELETE-INSERT(HELP) KEYS *****/
+
+    /* Note that the Windows "insert" key is the Mac "help" key */
+    "$\UF728"   = "cut:";                           /* Shft-FwdDel  Cut */   
+    "^\UF746"   = "copy:";                          /* C-Help       Copy */
+    "$\UF746"   = "paste:";                         /* Shft-Help    Paste */
+
+
+/***** RETURN KEY *****/
+
+    "$\U000A"   = "insertLineBreak:";               /* Shft-Ret     Line break */
+
+
+/***** F KEYS *****/
+
+    "\UF704"    = "showContextHelp:";               /* F1           Show help */
+    
+    "^\UF707"   = "performClose:";                  /* C-F4         Close document */
+
+/***** ARROWS *****/
+
+    "^\UF700"   = "moveToBeginningOfParagraph:";    /* C-up         Move to beginning of paragraph */
+    "^\UF701"   = "moveToEndOfParagraph:";          /* C-down       Move to end of paragraph */
+
+    "^$\UF700"  = "moveToBeginningOfParagraphAndModifySelection:";
+                                                    /* C-Shft-up    Select to beginning of paragraph */
+    "^$\UF701"  = "moveToEndOfParagraphAndModifySelection:";
+                                                    /* C-Shft-down  Select to end of paragraph */
+
+    "^\UF702"   = "moveWordLeft:";                  /* C-left       Move word left */
+    "^\UF703"   = "moveWordRight:";                 /* C-right      Move word right */
+
+    "$^\UF702"  = "moveWordLeftAndModifySelection:";
+                                                    /* C-Shft-left  Select word left */
+    "$^\UF703"  = "moveWordRightAndModifySelection:";
+                                                    /* C-Shft-right Select word right */
+
+
+/***** CTRL + LETTERS *****/
+
+    "^a"        = "selectAll:";                     /* C-a          Select all */
+
+    "^x"        = "cut:";                           /* C-x          Cut */
+    "^c"        = "copy:";                          /* C-c          Copy */
+    "^v"        = "paste:";                         /* C-v          Paste */
+
+    "^z"        = "undo:";                          /* C-z          Undo */
+    "^y"        = "redo:";                          /* C-y          Redo */
+
+    "^s"        = "save:";                          /* C-s          Save */
+    "^S"        = "saveAs:";                        /* C-Shft-s     Save as */
+    "^p"        = "print:";                         /* C-p          Print */
+
+}

@@ -1,0 +1,64 @@
+{
+/*
+ *  Leetspeak keybinding example, by Jacob Rus
+ *
+ *  You probably don't want to use this as anything other than an example.
+ *
+ */
+
+ "a" = ("insertText:", "4");
+ "b" = ("insertText:", "8");
+ "c" = ("insertText:", "<");
+ "d" = ("insertText:", "o|");
+ "e" = ("insertText:", "3");
+ "f" = ("insertText:", "ph");
+ "g" = ("insertText:", "6");
+ "h" = ("insertText:", "|-|");
+ "i" = ("insertText:", "¡");
+ "j" = ("insertText:", "_|");
+ "k" = ("insertText:", "|<");
+ "l" = ("insertText:", "1");
+ "m" = ("insertText:", "/\\/\\");
+ "n" = ("insertText:", "|\\|");
+ "o" = ("insertText:", "0");
+ "p" = ("insertText:", "|°");
+ "q" = ("insertText:", "0_");
+ "r" = ("insertText:", "|2");
+ "s" = ("insertText:", "z");
+ "t" = ("insertText:", "7");
+ "u" = ("insertText:", "(_)");
+ "v" = ("insertText:", "\\/");
+ "w" = ("insertText:", "\\^/");
+ "x" = ("insertText:", "×");
+ "y" = ("insertText:", "`/");
+ "z" = ("insertText:", "%");
+ "A" = ("insertText:", "/-\\");
+ "B" = ("insertText:", "|3");
+ "C" = ("insertText:", "©");
+ "D" = ("insertText:", "[)");
+ "E" = ("insertText:", "[-");
+ "F" = ("insertText:", "/#");
+ "G" = ("insertText:", "(y");
+ "H" = ("insertText:", "]-[");
+ "I" = ("insertText:", "][");
+ "J" = ("insertText:", "_/");
+ "K" = ("insertText:", "|{");
+ "L" = ("insertText:", "|_");
+ "M" = ("insertText:", "[]\\/[]");
+ "N" = ("insertText:", "[]\\[]");
+ "O" = ("insertText:", "()");
+ "P" = ("insertText:", "|^");
+ "Q" = ("insertText:", "(_,)");
+ "R" = ("insertText:", "P\\");
+ "S" = ("insertText:", "§");
+ "T" = ("insertText:", "-|-");
+ "U" = ("insertText:", "|_|");
+ "V" = ("insertText:", "\\_/");
+ "W" = ("insertText:", "\\/\\/");
+ "X" = ("insertText:", "><");
+ "Y" = ("insertText:", "\|");
+ "Z" = ("insertText:", "~/_");
+ 
+ /* An exclamation point done right */
+ "!" = ("insertText:", "!!11!eleventy-one!1!!!!");
+}

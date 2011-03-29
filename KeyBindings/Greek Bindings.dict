@@ -1,0 +1,69 @@
+{
+/*
+ *  Greek keybinding example, by Jacob Rus.
+ *
+ *  Note that this is an example, and is not very usable on a
+ *  day-to-day basis.
+ */         
+    "a"  = ("insertText:", "\U03B1");    /* a      alpha */
+    "b"  = ("insertText:", "\U03B2");    /* b      beta */
+    "g"  = ("insertText:", "\U03B3");    /* g      gamma */       
+    "d"  = ("insertText:", "\U03B4");    /* d      delta */
+    "e"  = ("insertText:", "\U03B5");    /* e      epsilon */
+    "~e" = ("insertText:", "\U03F5");    /* O-e    epsilon var */
+    "z"  = ("insertText:", "\U03B6");    /* z      zeta */
+    "h"  = ("insertText:", "\U03B7");    /* h      eta */
+    "q"  = ("insertText:", "\U03B8");    /* q      theta */
+    "~q" = ("insertText:", "\U03D1");    /* O-q    theta var */
+    "i"  = ("insertText:", "\U03B9");    /* i      iota */
+    "k"  = ("insertText:", "\U03BA");    /* k      kappa */
+    "l"  = ("insertText:", "\U03BB");    /* l      lambda */
+    "m"  = ("insertText:", "\U03BC");    /* m      mu */
+    "n"  = ("insertText:", "\U03BD");    /* n      nu */
+    "x"  = ("insertText:", "\U03BE");    /* x      xi */
+    "o"  = ("insertText:", "\U03BF");    /* o      omicron */
+    "p"  = ("insertText:", "\U03C0");    /* p      pi */
+    "r"  = ("insertText:", "\U03C1");    /* r      rho */
+    "~r" = ("insertText:", "\U03F1");    /* O-r    rho var */
+    "~s" = ("insertText:", "\U03C2");    /* O-s    final sigma */
+    "s"  = ("insertText:", "\U03C3");    /* s      sigma */
+    "t"  = ("insertText:", "\U03C4");    /* t      tau */
+    "u"  = ("insertText:", "\U03C5");    /* u      upsilon */
+    "f"  = ("insertText:", "\U03C6");    /* f      phi */
+    "~f" = ("insertText:", "\U03D5");    /* O-f    phi var */
+    "c"  = ("insertText:", "\U03C7");    /* c      chi */
+    "y"  = ("insertText:", "\U03C8");    /* y      psi */
+    "w"  = ("insertText:", "\U03C9");    /* w      omega */
+                                                    
+                                                    
+    "A"  = ("insertText:", "\U0391");     /* A      Alpha */
+    "B"  = ("insertText:", "\U0392");     /* B      Beta */
+    "G"  = ("insertText:", "\U0393");     /* G      Gamma */
+    "D"  = ("insertText:", "\U0394");     /* D      Delta */
+    "E"  = ("insertText:", "\U0395");     /* E      Epsilon */
+    "Z"  = ("insertText:", "\U0396");     /* Z      Zeta */
+    "H"  = ("insertText:", "\U0397");     /* H      Eta */
+    "Q"  = ("insertText:", "\U0398");     /* Q      Theta */
+    "I"  = ("insertText:", "\U0399");     /* I      Iota */
+    "K"  = ("insertText:", "\U039A");     /* K      Kappa */
+    "L"  = ("insertText:", "\U039B");     /* L      Lambda */
+    "M"  = ("insertText:", "\U039C");     /* M      Mu */
+    "N"  = ("insertText:", "\U039D");     /* N      Nu */
+    "X"  = ("insertText:", "\U039E");     /* X      Xi */
+    "O"  = ("insertText:", "\U039F");     /* O      Omicron */
+    "P"  = ("insertText:", "\U03A0");     /* P      Pi */
+    "R"  = ("insertText:", "\U03A1");     /* R      Rho */
+    "S"  = ("insertText:", "\U03A3");     /* S      Sigma */
+    "T"  = ("insertText:", "\U03A4");     /* T      Tau */
+    "U"  = ("insertText:", "\U03A5");     /* U      Upsilon */
+    "F"  = ("insertText:", "\U03A6");     /* F      Phi */
+    "C"  = ("insertText:", "\U03A7");     /* C      Chi */
+    "Y"  = ("insertText:", "\U03A8");     /* Y      Psi */
+    "W"  = ("insertText:", "\U03A9");     /* W      Omega */
+    
+    /*Make sure other letters do nothing*/
+    "j"     = "noop:";
+    "v"     = "noop:";
+    "J"     = "noop:";
+    "V"     = "noop:";
+}
